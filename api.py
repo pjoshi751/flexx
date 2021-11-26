@@ -73,5 +73,10 @@ def get_rid_status(server, token, rid):
 
     r = requests.post(url, cookies=cookies, json = j, verify=True)
     r = response_to_json(r)
+    if r['errors'] is not None:
+        if len(r['errors']) > 0:
+           code = r['errors'][0]['errorCode']
+           msg = r['errors'][0]['message'] 
+           return f'ERROR: {code}: {msg}'
     return r['response']['ridStatus']
 
