@@ -80,3 +80,11 @@ def get_rid_status(server, token, rid):
            return f'ERROR: {code}: {msg}'
     return r['response']['ridStatus']
 
+def get_credential_types(server, token):
+    url = f'''{server}/resident/v1/credential/types'''
+    ts = get_timestamp()
+    cookies = {'Authorization' : token}
+    r = requests.get(url, cookies=cookies, verify=True)
+    r = response_to_json(r)
+    print(r)
+
