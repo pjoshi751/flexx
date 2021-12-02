@@ -1,0 +1,511 @@
+{
+	"info": {
+		"_postman_id": "9185dd02-55a0-4d43-9453-d46d31bf1a6d",
+		"name": "Resident-Service-APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Send OTP",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"uinId\", \"8914013598\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJtdm9YQzNvdHpZT1U2QUl0WEZIODZIM1VrU1pOVjNpeG9zVnAzdXVweURRIn0.eyJqdGkiOiIzODdiOGQxNC1mNWY5LTQ3NzktYjg1NC0yNjNmOGFiZTM4NjYiLCJleHAiOjE2MDI1MTkzODUsIm5iZiI6MCwiaWF0IjoxNjAyNDgzMzg1LCJpc3MiOiJodHRwczovL3FhLm1vc2lwLm5ldC9rZXljbG9hay9hdXRoL3JlYWxtcy9tb3NpcCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI2ZmY1NThlMC0wYzIwLTQxNTYtOWE5MS1hZDZjYjM2MWZmYTIiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJtb3NpcC1hZG1pbi1jbGllbnQiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiJhNTcxZWVkZS1kNWE2LTQzZjctYmNlOS04NjY0MDY3NTY2NmIiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIlJFR0lTVFJBVElPTl9BRE1JTiIsIlJFR0lTVFJBVElPTl9PRkZJQ0VSIiwiUkVHSVNUUkFUSU9OX1NVUEVSVklTT1IiLCJaT05BTF9BRE1JTiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJHTE9CQUxfQURNSU4iLCJJTkRJVklEVUFMIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiVGVzdDExMDAwNiBBdXRvMTEwMDA2IiwicHJlZmVycmVkX3VzZXJuYW1lIjoiMTEwMDA2IiwiZ2l2ZW5fbmFtZSI6IlRlc3QxMTAwMDYiLCJmYW1pbHlfbmFtZSI6IkF1dG8xMTAwMDYiLCJlbWFpbCI6IjExMDAwNkB4eXouY29tIn0.FLzyIvSXlsurJBK1w42xC5Vv6mghQCW3xgQvr8WCAMQFkt5wXudCyAm2k2RbKA4MHaJSbtaEhpN71BiW6eAECfGM1Su5Q5gvlQs-o7z-tazWJFx6o9kqeR3OCXNq5PFs9zTwKH_SK5fASPN2taKbyMSTvnj70-BuKuZz8p8I3KP6JznCHmWf5xgdLo22tA42cKbNukNB48VPoKZ13KKSFSG8ygiSBoVY_Mjs6RSuWqT4iKEB5R9Ed4th-vBwoUC5BcFT14NEhDc1uFOsya0mx42azrnV4oPKB68jq2eQPq2KHfvTSGTwTjerXq8MmJox9DM4tgl9HG4EFaPAq3wIZg"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"mosip.identity.otp.internal\",\n  \"individualId\": \"7809603913\",\n  \"individualIdType\": \"UIN\",\n  \"metadata\": {},\n  \"otpChannel\": [\"EMAIL\"],\n  \"requestTime\": \"2021-11-26T05:15:36.681Z\",\n  \"transactionID\": \"1234566667\",\n  \"version\": \"1.0\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/req/otp",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"req",
+						"otp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POst credentialissuance req _credential",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "Authorization=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRWFE5S0FyUlNpckJaSmVQQ2JyeFh1dl90ODNXUXdPTGVCYV8yWFhoQzk4In0.eyJqdGkiOiI4MjNhNTZiMy0yODlhLTRiMmItYTQ5Zi1jNjZmNzViNGY4ZTAiLCJleHAiOjE2MDU4MDI2NTMsIm5iZiI6MCwiaWF0IjoxNjA1NzY2NjUzLCJpc3MiOiJodHRwczovL3FhLm1vc2lwLm5ldC9rZXljbG9hay9hdXRoL3JlYWxtcy9tb3NpcCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJiZjdlNGRjYS0yYWRhLTQzN2YtYTdjOC03Mzg1NzMwZjhmMDkiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJtb3NpcC1yZWdwcm9jLWNsaWVudCIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6Ijk0OTIzOWQ5LTBjZjctNGVhNC05YjY5LTBmMzU5YzgyYzkwNSIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiUkVHSVNUUkFUSU9OX1BST0NFU1NPUiIsIlJFR0lTVFJBVElPTl9BRE1JTiIsIkNSRURFTlRJQUxfUkVRVUVTVCIsIkNSRUFURV9TSEFSRSIsIm9mZmxpbmVfYWNjZXNzIiwiREFUQV9SRUFEIiwiTUVUQURBVEFfUkVBRCIsIlBPTElDWU1BTkFHRVIiLCJET0NVTUVOVF9SRUFEIiwidW1hX2F1dGhvcml6YXRpb24iLCJCSU9NRVRSSUNfUkVBRCJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfSwibW9zaXAtcmVncHJvYy1jbGllbnQiOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJjbGllbnRJZCI6Im1vc2lwLXJlZ3Byb2MtY2xpZW50IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRIb3N0IjoiMTAuMjQ0LjYuMTY5IiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LW1vc2lwLXJlZ3Byb2MtY2xpZW50IiwiY2xpZW50QWRkcmVzcyI6IjEwLjI0NC42LjE2OSJ9.iykNDWiyF6DYI-Ow3_ktb_2uwMmF3FEWZ_1e0rN3G3VWUN6UaRbrO4rlDN1DiaZ1uf10HUi31wogC6cqVgQFM95ZH_WFKrNMLW21IFzljp2mYKMqI9SGNO57gO1p1zrpQl_zE18WRFVS9MMghcTFEIORAdXfib-NVsvN3lDI_UL_Z9YqAAssPzBz_Rany7f-EhtLAMYF9pyHW_AFIXRgYr8UBaTDp2vi0GwP0u2pBevIakr5WkW8RIZAHlrM1999Nq0aRChcIuv3T6qJ83jXMQR6yjZY13w8tjx0uCmpDizs0Zv4SaGQLi2V4ckclDGwkz_Rcvgp1z8bUuyoaAR9zg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"string\",\r\n  \"request\": {\r\n    \"additionalData\": {},\r\n    \"credentialType\": \"euin\",\r\n    \"encrypt\": true,\r\n    \"encryptionKey\": \"abc123\",\r\n    \"individualId\": \"4029173042\",\r\n    \"issuer\": \"mpartner-default-print\",\r\n    \"otp\": \"111111\",\r\n    \"recepiant\": \"\",\r\n    \"sharableAttributes\": [],\r\n    \"transactionID\": \"1234566667\",\r\n    \"user\": \"string\"\r\n  },\r\n  \"requesttime\": \"2020-12-02T04:48:08.731Z\",\r\n  \"version\": \"v1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/req/credential",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"req",
+						"credential"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get Credential Status With reqid",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/req/credential/status/a38509b5-f54f-4a4d-a3e1-fc1a330930e6",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"req",
+						"credential",
+						"status",
+						"a38509b5-f54f-4a4d-a3e1-fc1a330930e6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel The credential req",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/req/credential/cancel/e1dbdebd-0be3-4e2b-9e4e-1e784dd31222",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"req",
+						"credential",
+						"cancel",
+						"e1dbdebd-0be3-4e2b-9e4e-1e784dd31222"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DownLoad EUIN with req",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/req/card/a38509b5-f54f-4a4d-a3e1-fc1a330930e6",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"req",
+						"card",
+						"a38509b5-f54f-4a4d-a3e1-fc1a330930e6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth- History",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "Authorization=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRWFE5S0FyUlNpckJaSmVQQ2JyeFh1dl90ODNXUXdPTGVCYV8yWFhoQzk4In0.eyJqdGkiOiJiZDM4ODgwMC0xYTAzLTQ0YjYtYTMxYy1jNTdiODU4MTMwNDUiLCJleHAiOjE2MDM1NzIwNTIsIm5iZiI6MCwiaWF0IjoxNjAzNTM2MDUyLCJpc3MiOiJodHRwczovL3FhLm1vc2lwLm5ldC9rZXljbG9hay9hdXRoL3JlYWxtcy9tb3NpcCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiIzNzQyMjg4Yi00Mjc4LTQ0ZGItOTFjYi1mYjNjNTYxZmZhOGUiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJtb3NpcC1hZG1pbi1jbGllbnQiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiJlM2E2NGNiYy1mNGVkLTRiNjItOWUyYy0yNzRlZjM5YjMxZTMiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIlJFR0lTVFJBVElPTl9QUk9DRVNTT1IiLCJSRUdJU1RSQVRJT05fQURNSU4iLCJSRUdJU1RSQVRJT05fT0ZGSUNFUiIsIlpPTkFMX0FETUlOIiwiUkVHSVNUUkFUSU9OX1NVUEVSVklTT1IiLCJNQVNURVJEQVRBX0FETUlOIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIkdMT0JBTF9BRE1JTiIsIklORElWSURVQUwiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsIm5hbWUiOiJUZXN0MTEwMDA2IEF1dG8xMTAwMDYiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiIxMTAwMDYiLCJnaXZlbl9uYW1lIjoiVGVzdDExMDAwNiIsImZhbWlseV9uYW1lIjoiQXV0bzExMDAwNiIsImVtYWlsIjoiMTEwMDA2QHh5ei5jb20ifQ.PI1ww0f8ym4mamZ_4-jmLEltwKLTHOF_LaughtmA1CdORMcHHEIlNPa8kuRKvO1r3vKbqKjXiXyXOywJUhnO16t0EVw6_5WjmkiuQ3sUZToLvVrQXTJ3SrhPmszdvR1F_ZUWqldwdcDGzYyKH994XDRF8k2-trV0DJ9VlxiVua6wnReBzjCQtKOXJm9yXN8DUaN2rAR1Sq7LcTVlwFX2M_4EpzDu_15p6Jjzs-OK0MobD4dquwDNfw_heB1Hf48VVvLBf3KdjJRGW48ekPwX_IdmBeHvZ10_gAgIMoZAqNygw76orBXryPE2a9p_4pm_4Xck2nxeuOU3eLTaNNiCiQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"mosip.resident.authhistory\",\r\n  \"request\": {\r\n    \"individualId\": \"8754715728\",\r\n    \"otp\": \"111111\",\r\n    \"pageFetch\": \"50\",\r\n    \"pageStart\": \"1\",\r\n    \"transactionID\": \"1234566667\"\r\n  },\r\n  \"requesttime\": \"2020-03-19T10:39:04.683Z\",\r\n  \"version\": \"v1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/req/auth-history",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"req",
+						"auth-history"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check Status with RID [UIN Generation/Updation,Reprint]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "Authorization=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRWFE5S0FyUlNpckJaSmVQQ2JyeFh1dl90ODNXUXdPTGVCYV8yWFhoQzk4In0.eyJqdGkiOiJkOGZhODFjOC1hMmRlLTRlZGItYTIwNS00MzhjY2VjYzJiYjUiLCJleHAiOjE2MDMyMjM1MzksIm5iZiI6MCwiaWF0IjoxNjAzMTg3NTM5LCJpc3MiOiJodHRwczovL3FhLm1vc2lwLm5ldC9rZXljbG9hay9hdXRoL3JlYWxtcy9tb3NpcCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiIzNzQyMjg4Yi00Mjc4LTQ0ZGItOTFjYi1mYjNjNTYxZmZhOGUiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJtb3NpcC1hZG1pbi1jbGllbnQiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiJjZTk2MmRlZC1hZGE0LTQ0YTQtOWQzMS01YzBkMTM4YjQ5YzUiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIlJFR0lTVFJBVElPTl9QUk9DRVNTT1IiLCJSRUdJU1RSQVRJT05fQURNSU4iLCJSRUdJU1RSQVRJT05fT0ZGSUNFUiIsIlpPTkFMX0FETUlOIiwiUkVHSVNUUkFUSU9OX1NVUEVSVklTT1IiLCJNQVNURVJEQVRBX0FETUlOIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsIkdMT0JBTF9BRE1JTiIsIklORElWSURVQUwiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsIm5hbWUiOiJUZXN0MTEwMDA2IEF1dG8xMTAwMDYiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiIxMTAwMDYiLCJnaXZlbl9uYW1lIjoiVGVzdDExMDAwNiIsImZhbWlseV9uYW1lIjoiQXV0bzExMDAwNiIsImVtYWlsIjoiMTEwMDA2QHh5ei5jb20ifQ.ZOiRfwyTfFYWdkKPuEccXAhsxs2NBPeOw0wPpkmMp9auaHIwonnUzNlShEbXj9-dOcmCQL3aRT3wM4l-ApIvq7hCETU3RhjIeIuco3DEa4qjvqa1pQunoqJjZlsw_Jc08zYkHknHiFsdOMYC2a0x8y3XuHCYXpKVDC68SgNjDOrDrJByqielcS8b5rd-nkkCQR6dTXq_gXpynI239imMwWiSW2h3S6RqzwYkD_hVCpOkg_8c8kiShKVuUYJCBGZHsvQI4RLInYtik-NP9Xcg8tS4urm2aQ2okvaRJCX80e47MjiK0a37KYQpfEiER4A89IHS9eF1Qphuu0Vf9-ve_Q",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\r\n  \"id\": \"mosip.resident.checkstatus\",\r\n  \"request\": {\r\n    \"individualId\": \"10001100010001420211028071359\",\r\n    \"individualIdType\": \"RID\"\r\n  },\r\n  \"requesttime\": \"2020-06-05T09:22:41.882Z\",\r\n  \"version\": \"v1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/rid/check-status",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"rid",
+						"check-status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Revoke VID",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"mosip.resident.vidstatus\",\r\n  \"version\": \"v1\",\r\n  \"requesttime\": \"2021-11-23T05:29:55.999Z\",\r\n  \"request\": {\r\n  \"transactionID\": \"1234566667\",\r\n  \"individualId\": \"7310641795\",\r\n  \"individualIdType\": \"UIN\",\r\n  \"otp\": \"111111\",\r\n  \"vidStatus\": \"REVOKED\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/vid/6283906982187927",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"vid",
+						"6283906982187927"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate VID",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "signature",
+						"value": "eyJ4NWMiOlsiTUlJRGRqQ0NBbDZnQXdJQkFnSUlkL0oxWEFCNUIyMHdEUVlKS29aSWh2Y05BUUVMQlFBd1dERUxNQWtHQTFVRUJoTUNTVTR4Q3pBSkJnTlZCQWdNQWt0Qk1RMHdDd1lEVlFRS0RBUXlNREExTVJvd0dBWURWUVFMREJGSlJFRXRWRVZUVkMxUFVrY3RWVTVKVkRFUk1BOEdBMVVFQXd3SVNVNVVSVkl0Y25Bd0hoY05NakV3TmpBME1EazFOek14V2hjTk1qSXdOakEwTURrMU56TXhXakJhTVFzd0NRWURWUVFHRXdKSlRqRUxNQWtHQTFVRUNBd0NTMEV4RFRBTEJnTlZCQW9NQkRJd01EVXhHakFZQmdOVkJBc01FVWxFUVMxVVJWTlVMVTlTUnkxVlRrbFVNUk13RVFZRFZRUUREQXBRUVZKVVRrVlNMWEp3TUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUFnU1hNNmpOaWRxR2NWTkVoV2t0NUZaTEViL2tCNDc0ZWQ3Vm1LQWVzcitFK0xkQkJQcWdkOFFuNDR5aHhJSndnazljeUkwUzhZN1VLVmdoR3JPditPbFYzcExSdXhYTFdoOWZqcFBtYXlRSEJCbzVhdHF3eE9mT0lsZllUZEJsb0ZwZmZPZWtNSi9Mc1pwdlI2THdlTktSVDdCZjN0b0RxV2NobWh4eGRuNlhZaVJRRk1ZbmJFRU9kdnIxNGp1MnloUXZYWHMxRk9FM0dCTnFxbEFRQjNhek1vYktLUFJuSzFablY0UzlTYlFSM1BQM1FIUi9RSmIyTWJtTUZXYTN2UGM3K0hKWmFWVzFLTzFwd0VMcG9jZk41NHV6ODVFYjVBSmxhaGhsbkJERnAzM0hxclJZVWV6ZXhEWG9SSitwU0RDWStTeFl1ZVQzR2RHMno5ZVJvRndJREFRQUJvMEl3UURBUEJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJRN0pzN0xwdy9TTi9wN3J4b0RMTS8xbHg5RUdUQU9CZ05WSFE4QkFmOEVCQU1DQW9Rd0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFHNmdTT3gzdlEvcmRqR2VVVENCT2M1cTNWTnJVOGlZZG1OWklzNHBGUEE5MUVoOEZORkdtaGl5Nk9ZODFjWUNob3FucTZjZW9CN2xaYkNacDR3SklLS3ZiM3R4UEhWMDVBNEhUcUJ6ZW9nUlVpckRpMXRaYmZObzh3cUF5dHVibWE0VDQ5aEx3WU5hcHJVME1JQk1RdUlsRHJKcFFrWGVCZGJlV3QvOHR5RGRPNjJJa3cwZGNWSXhCRUNTbjllWWlFN1ppZDQyaURpbSt3Mk52RmJwTGVBbG11c2NwOHlRY0hTaE01K3dRNjJuVllIY1ZtS0pMUDdHYWF3R2JJMCtwSDZXck9Ib25ReDdLQnRRRkR1YnlqUXVZL3gxcmh1VXo5S01hQ0tETTRpWTZtb3JUcjBJUUJlak1xZndNQ1QwUHNxa2wyYU84NTc5Zm83OUpBeFdjUFk9Il0sImFsZyI6IlJTMjU2In0..ek2_N80_GE3KXDawFImPm6jvJi8Qa0dJsveNi9yvfCfJBqeAr-KPeWxJuNbS7j2krDQ7nUYbkgNXWM9kESRbQpw2MYdUk7hM4tt6NhcVp388g0ibZvJdCIkfvTuz7xjdPM0Z_7zmaYLwGBWWUkCzV_j55NOLUqxhUtnIrJV_LZbr4EbYvW9p5H9I147yBt23MtpixT0E00CPHk2YZVHA4AznWhvP1UOsY28i9PrK46vmdNJ4lnnngXq-Xj0hpgi-LWgJuuhN8zznSXTWJ9D2hvaXEvOmfzjlK3STLknLgBxfVZ7G09tW9rFqwP-ZUbf-VIvN0nBSrKBz5jdxUUvjjA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"mosip.resident.vid\",\r\n  \"request\": {\r\n \"individualId\": \"7310641795\",\r\n    \"individualIdType\": \"UIN\",\r\n    \"otp\": \"111111\",\r\n    \"transactionID\": \"1234566667\",\r\n    \"vidType\": \"Temporary\"\r\n  },\r\n  \"requesttime\": \"2020-09-30T06:20:22.404Z\",\r\n  \"version\": \"v1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/vid",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"vid"
+					]
+				},
+				"description": "1) perpetual VID is generated new number everytime you generated VID, by revoking the OLD one automatically.\r\n2) "
+			},
+			"response": []
+		},
+		{
+			"name": "Auth-lock[BIO/DEMO/OTP] Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"mosip.resident.authlock\",\r\n  \"version\": \"v1\",\r\n  \"requesttime\": \"2020-05-07T10:39:04.683Z\",\r\n  \"request\": {\r\n  \"transactionID\": \"1234566667\",\r\n  \"individualId\": \"8174256807\",\r\n    \"individualIdType\": \"UIN\",\r\n  \"otp\": \"111111\",\r\n  \"authType\": [\"bio-Finger\",\"bio-Iris\",\"demo\"]\r\n  \r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/req/auth-lock",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"req",
+						"auth-lock"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth-unlock[BIO/DEMO/OTP]",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"mosip.resident.authunlock\",\r\n    \"request\": {\r\n        \"authType\": [\r\n            \"demo\",\r\n            \"bio-Finger\",\r\n            \"bio-Iris\",\r\n            \"bio-FACE\"\r\n        ],\r\n        \"individualId\": \"8754715728\",\r\n        \"individualIdType\": \"UIN\",\r\n        \"otp\": \"111111\",\r\n        \"transactionID\": \"1234566667\",\r\n        \"unlockForSeconds\": \"\"\r\n    },\r\n    \"requesttime\": \"2021-05-11T11:21:43.663Z\",\r\n    \"version\": \"v1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/req/auth-unlock",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"req",
+						"auth-unlock"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update UIN",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRWFE5S0FyUlNpckJaSmVQQ2JyeFh1dl90ODNXUXdPTGVCYV8yWFhoQzk4In0.eyJqdGkiOiI4ZWRkNjU0MS0zODNiLTQxNTQtYTVlZS0wYjVlYzk2Y2E5YmMiLCJleHAiOjE2MDQ1OTM5NzQsIm5iZiI6MCwiaWF0IjoxNjA0NTU3OTc0LCJpc3MiOiJodHRwczovL3FhLm1vc2lwLm5ldC9rZXljbG9hay9hdXRoL3JlYWxtcy9tb3NpcCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJkMDdhZDM1Mi1lMmU3LTQ0NDYtOTFlZC0yNTliYmViNTQ0YzgiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJtb3NpcC1hZG1pbi1jbGllbnQiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiJiMDkwY2EzNS02MzY1LTQ1MjEtOGM1MS0wM2Q4ZjQ4NDhhZjQiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIkNSRURFTlRJQUxfUkVRVUVTVCIsIkNSRURFTlRJQUxfSVNTVUFOQ0UiLCJSRUdJU1RSQVRJT05fUFJPQ0VTU09SIiwiUkVHSVNUUkFUSU9OX0FETUlOIiwiUFJFX1JFR0lTVFJBVElPTiIsIlJFR0lTVFJBVElPTl9TVVBFUlZJU09SIiwiWk9OQUxfQURNSU4iLCJJRF9BVVRIRU5USUNBVElPTiIsIlBNU19VU0VSIiwiQ1JFQVRFX1NIQVJFIiwib2ZmbGluZV9hY2Nlc3MiLCJaT05BTF9BUFBST1ZFUiIsIlBBUlRORVJfQURNSU4iLCJ1bWFfYXV0aG9yaXphdGlvbiIsIkdMT0JBTF9BRE1JTiIsIk1JU1AiLCJQQVJUTkVSIiwiU1VQRVJBRE1JTiIsIlJFU0lERU5UIiwiUEFSVE5FUk1BTkFHRVIiLCJERVZJQ0VfUFJPVklERVIiLCJDRU5UUkFMX0FETUlOIiwiUFJFUkVHIiwiQ0VOVFJBTF9BUFBST1ZFUiIsIlBPTElDWU1BTkFHRVIiLCJQUkVfUkVHSVNUUkFUSU9OX0FETUlOIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiUGl5dXMgVGVzdCIsInByZWZlcnJlZF91c2VybmFtZSI6IjExMDExOSIsImdpdmVuX25hbWUiOiJQaXl1cyIsImZhbWlseV9uYW1lIjoiVGVzdCIsImVtYWlsIjoiMTEwMTE5QHh5ei5jb20ifQ.Dtd9oAF7uzyvdcQj9PU7BDUI4KXppTQS6B_NVVHU0VTY3c5VMs1eGB27Zze5Y1tJXnWVZM-Ibi3lNYAAmu2byNb60Hl4WBKIJX4a5k5jUuDf5p1NddF7Wxm11as9MFnRFN_VsG2wTvtSH84sYP-attmjY26ojrQFgNapxiYJVIagLZ9DlwkilV-t6kEiEMk_jTxTfjm6NUOlcWM_yEQe_DxaXzWtFKJ28txgjJ7V-FsmAVRXZYSmgAGg6pNoj1dH0c07l5D0tyLt3YNSB9UcoF6uItsYqFHpXje0BHcW2lHin1b12wg22pcpRp6LOV3EwaJ-U8yD-Jt3-xwITok7EA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"id\": \"mosip.resident.updateuin\",\r\n\t\"version\": \"v1\",\r\n\t\"requesttime\": \"2021-08-05T15:18:53.758Z\",\r\n\t\"request\": {\r\n\t\t\"transactionID\": \"1234566667\",\r\n\t\t\"individualId\": \"8572835906\",\r\n\t\t\"individualIdType\": \"UIN\",\r\n\t\t\"otp\": \"111111\",\r\n\t\t\"identityJson\": \"ewoJImlkZW50aXR5IjogewoJImRhdGVPZkJpcnRoIjogIjE5NzkvMDUvMDUiLAoJCSJJRFNjaGVtYVZlcnNpb24iOiAwLjIsCgkJIlVJTiI6ICI4NTcyODM1OTA2IgoJfQp9\"\r\n\t}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/req/update-uin",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"req",
+						"update-uin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "request for euin",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRWFE5S0FyUlNpckJaSmVQQ2JyeFh1dl90ODNXUXdPTGVCYV8yWFhoQzk4In0.eyJqdGkiOiI4ZWRkNjU0MS0zODNiLTQxNTQtYTVlZS0wYjVlYzk2Y2E5YmMiLCJleHAiOjE2MDQ1OTM5NzQsIm5iZiI6MCwiaWF0IjoxNjA0NTU3OTc0LCJpc3MiOiJodHRwczovL3FhLm1vc2lwLm5ldC9rZXljbG9hay9hdXRoL3JlYWxtcy9tb3NpcCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJkMDdhZDM1Mi1lMmU3LTQ0NDYtOTFlZC0yNTliYmViNTQ0YzgiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJtb3NpcC1hZG1pbi1jbGllbnQiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiJiMDkwY2EzNS02MzY1LTQ1MjEtOGM1MS0wM2Q4ZjQ4NDhhZjQiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIkNSRURFTlRJQUxfUkVRVUVTVCIsIkNSRURFTlRJQUxfSVNTVUFOQ0UiLCJSRUdJU1RSQVRJT05fUFJPQ0VTU09SIiwiUkVHSVNUUkFUSU9OX0FETUlOIiwiUFJFX1JFR0lTVFJBVElPTiIsIlJFR0lTVFJBVElPTl9TVVBFUlZJU09SIiwiWk9OQUxfQURNSU4iLCJJRF9BVVRIRU5USUNBVElPTiIsIlBNU19VU0VSIiwiQ1JFQVRFX1NIQVJFIiwib2ZmbGluZV9hY2Nlc3MiLCJaT05BTF9BUFBST1ZFUiIsIlBBUlRORVJfQURNSU4iLCJ1bWFfYXV0aG9yaXphdGlvbiIsIkdMT0JBTF9BRE1JTiIsIk1JU1AiLCJQQVJUTkVSIiwiU1VQRVJBRE1JTiIsIlJFU0lERU5UIiwiUEFSVE5FUk1BTkFHRVIiLCJERVZJQ0VfUFJPVklERVIiLCJDRU5UUkFMX0FETUlOIiwiUFJFUkVHIiwiQ0VOVFJBTF9BUFBST1ZFUiIsIlBPTElDWU1BTkFHRVIiLCJQUkVfUkVHSVNUUkFUSU9OX0FETUlOIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiUGl5dXMgVGVzdCIsInByZWZlcnJlZF91c2VybmFtZSI6IjExMDExOSIsImdpdmVuX25hbWUiOiJQaXl1cyIsImZhbWlseV9uYW1lIjoiVGVzdCIsImVtYWlsIjoiMTEwMTE5QHh5ei5jb20ifQ.Dtd9oAF7uzyvdcQj9PU7BDUI4KXppTQS6B_NVVHU0VTY3c5VMs1eGB27Zze5Y1tJXnWVZM-Ibi3lNYAAmu2byNb60Hl4WBKIJX4a5k5jUuDf5p1NddF7Wxm11as9MFnRFN_VsG2wTvtSH84sYP-attmjY26ojrQFgNapxiYJVIagLZ9DlwkilV-t6kEiEMk_jTxTfjm6NUOlcWM_yEQe_DxaXzWtFKJ28txgjJ7V-FsmAVRXZYSmgAGg6pNoj1dH0c07l5D0tyLt3YNSB9UcoF6uItsYqFHpXje0BHcW2lHin1b12wg22pcpRp6LOV3EwaJ-U8yD-Jt3-xwITok7EA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"mosip.resident.euin\",\r\n  \"version\": \"v1\",\r\n  \"requesttime\": \"2021-11-11T07:43:21.346Z\",\r\n  \"request\": {\r\n    \"transactionID\": \"1234566667\",\r\n    \"individualId\": \"7917243782\",\r\n    \"individualIdType\": \"UIN\",\r\n    \"cardType\": \"UIN\",\r\n    \"otp\": \"111111\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/req/euin",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"req",
+						"euin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "request for reprint",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRWFE5S0FyUlNpckJaSmVQQ2JyeFh1dl90ODNXUXdPTGVCYV8yWFhoQzk4In0.eyJqdGkiOiI4ZWRkNjU0MS0zODNiLTQxNTQtYTVlZS0wYjVlYzk2Y2E5YmMiLCJleHAiOjE2MDQ1OTM5NzQsIm5iZiI6MCwiaWF0IjoxNjA0NTU3OTc0LCJpc3MiOiJodHRwczovL3FhLm1vc2lwLm5ldC9rZXljbG9hay9hdXRoL3JlYWxtcy9tb3NpcCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJkMDdhZDM1Mi1lMmU3LTQ0NDYtOTFlZC0yNTliYmViNTQ0YzgiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJtb3NpcC1hZG1pbi1jbGllbnQiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiJiMDkwY2EzNS02MzY1LTQ1MjEtOGM1MS0wM2Q4ZjQ4NDhhZjQiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIkNSRURFTlRJQUxfUkVRVUVTVCIsIkNSRURFTlRJQUxfSVNTVUFOQ0UiLCJSRUdJU1RSQVRJT05fUFJPQ0VTU09SIiwiUkVHSVNUUkFUSU9OX0FETUlOIiwiUFJFX1JFR0lTVFJBVElPTiIsIlJFR0lTVFJBVElPTl9TVVBFUlZJU09SIiwiWk9OQUxfQURNSU4iLCJJRF9BVVRIRU5USUNBVElPTiIsIlBNU19VU0VSIiwiQ1JFQVRFX1NIQVJFIiwib2ZmbGluZV9hY2Nlc3MiLCJaT05BTF9BUFBST1ZFUiIsIlBBUlRORVJfQURNSU4iLCJ1bWFfYXV0aG9yaXphdGlvbiIsIkdMT0JBTF9BRE1JTiIsIk1JU1AiLCJQQVJUTkVSIiwiU1VQRVJBRE1JTiIsIlJFU0lERU5UIiwiUEFSVE5FUk1BTkFHRVIiLCJERVZJQ0VfUFJPVklERVIiLCJDRU5UUkFMX0FETUlOIiwiUFJFUkVHIiwiQ0VOVFJBTF9BUFBST1ZFUiIsIlBPTElDWU1BTkFHRVIiLCJQUkVfUkVHSVNUUkFUSU9OX0FETUlOIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiUGl5dXMgVGVzdCIsInByZWZlcnJlZF91c2VybmFtZSI6IjExMDExOSIsImdpdmVuX25hbWUiOiJQaXl1cyIsImZhbWlseV9uYW1lIjoiVGVzdCIsImVtYWlsIjoiMTEwMTE5QHh5ei5jb20ifQ.Dtd9oAF7uzyvdcQj9PU7BDUI4KXppTQS6B_NVVHU0VTY3c5VMs1eGB27Zze5Y1tJXnWVZM-Ibi3lNYAAmu2byNb60Hl4WBKIJX4a5k5jUuDf5p1NddF7Wxm11as9MFnRFN_VsG2wTvtSH84sYP-attmjY26ojrQFgNapxiYJVIagLZ9DlwkilV-t6kEiEMk_jTxTfjm6NUOlcWM_yEQe_DxaXzWtFKJ28txgjJ7V-FsmAVRXZYSmgAGg6pNoj1dH0c07l5D0tyLt3YNSB9UcoF6uItsYqFHpXje0BHcW2lHin1b12wg22pcpRp6LOV3EwaJ-U8yD-Jt3-xwITok7EA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"id\": \"mosip.resident.updateuin\",\r\n\t\"version\": \"v1\",\r\n\t\"requesttime\": \"2021-08-05T15:18:53.758Z\",\r\n\t\"request\": {\r\n\t\t\"transactionID\": \"1234566667\",\r\n\t\t\"individualId\": \"6913742097\",\r\n\t\t\"individualIdType\": \"UIN\",\r\n\t\t\"otp\": \"111111\",\r\n\t\t\"identityJson\": \"ewoJImlkZW50aXR5IjogewoJImRhdGVPZkJpcnRoIjogIjE5NzgvMDUvMDUiLAoJCSJJRFNjaGVtYVZlcnNpb24iOiAwLjIsCgkJIlVJTiI6ICI2OTEzNzQyMDk3IgoJfQp9\"\r\n\t}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/resident/v1/req/update-uin",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"resident",
+						"v1",
+						"req",
+						"update-uin"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "uinID",
+			"value": ""
+		}
+	]
+}
