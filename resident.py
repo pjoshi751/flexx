@@ -25,7 +25,6 @@ class ResidentMain(flx.PyComponent):
         rid = events[-1]['rid'] 
         status = get_rid_status(rid)
         self.resident.set_status(f'Status: {status}')
-        get_credential_types()
 
 class Resident(flx.Widget):
 
@@ -56,6 +55,20 @@ class Resident(flx.Widget):
             flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
 
         self.current_label = self.label_a
+
+    @flx.action
+    def set_status(self, text):
+        global window
+        window.alert(text)
+
+    @flx.emitter
+    def rid_submitted(self, rid):
+        return {'rid': rid}
+
+    @flx.reaction('submit.pointer_click')
+    def handle_rid_submit(self, *events):
+        unused = events # noqa
+        self.rid_submitted(self.rid.text)
 
     @event.reaction('label_a.pointer_down', 'label_b.pointer_down', 'label_c.pointer_down', 'label_d.pointer_down',
                     'label_e.pointer_down')

@@ -26,7 +26,6 @@ class ResidentMain(flx.PyComponent):
         rid = events[-1]['rid'] 
         status = get_rid_status(rid)
         self.resident.set_status(f'Status: {status}')
-        get_credential_types()
 
 class Resident(flx.Widget):
 
