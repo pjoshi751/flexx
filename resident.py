@@ -13,10 +13,10 @@ flx.assets.associate_asset(__name__, 'style.css', style)
 class Resident(flx.Widget):
 
     def init(self):
-        with flx.VBox(css_class='form'):
+        with flx.VBox():
             with flx.HBox():
-                flx.Label(text='Resident HelpDesk', css_class='title')
-                flx.ImageWidget(flex=1, source='https://www.omidyarnetwork.in/wp-content/uploads/2019/05/mosip.png')
+                flx.Label(text='Resident HelpDesk', css_class='sitetitle')
+                flx.ImageWidget(flex=1, source='https://www.omidyarnetwork.in/wp-content/uploads/2019/05/mosip.png', css_class='logo')
             with flx.HBox():
                 with flx.VBox():
                     self.labela = flx.Label(text='RID status', css_class='left_label_selected')
@@ -24,10 +24,11 @@ class Resident(flx.Widget):
                     self.labelc = flx.Label(text='blue', css_class='left_label')
                     flx.Widget(flex=1)  # space filler
                 with flx.StackLayout(flex=1) as self.stack:
-                    self.labela.w = flx.Widget(style='background:#a00;')
-                    self.labelb.w = flx.Widget(style='background:#0a0;')
-                    self.labelc.w = flx.Widget(style='background:#00a;')
-            flx.Label(text='(c) MOSIP www.mosip.io')
+                    self.labela.w = flx.Widget(style='background:#fff;')
+                    self.labelb.w = flx.Widget(style='background:#fff')
+                    self.labelc.w = flx.Widget(style='background:#fff;')
+            flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
+
         self.current_label = self.labela
 
     @event.reaction('labela.pointer_down', 'labelb.pointer_down', 'labelc.pointer_down')

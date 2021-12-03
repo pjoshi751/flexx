@@ -1,16 +1,21 @@
-.form {width: 40em; margin 0.5em;}
-.form .flx-Button {width: 10em; background: #9d9; text-align: center;} 
-.title {font-size: 200%; text-align: center;}
-.logo {min-width: 200px; min-height: 200px;}
-.form .left_label {min-width: 300px !important;
-                   min-height:50px !important;
-                   background: #fff !important;
-                   text-align: center !important;
-                   font-size: 150% !important}
-.form .left_label_selected {min-width: 300px !important;
-                            min-height:50px !important;
-                            background: #9d9 !important;
-                            text-align: center !important;
-                            font-size: 150% !important}
+.logo {max-width: 80px; max-height: 80px !important;}
+.left_label {min-width: 300px !important;
+             min-height: 50px !important;
+             background: #fff !important;
+             text-align: center !important;
+             border-radius: 10px !important ;
+             border: 3px solid #BADA55 !important;
+             padding: 20px 0 !important ;
+             font-size: 150% !important;}
+.left_label_selected {min-width: 300px !important;
+                      min-height: 50px !important;
+                      background: #9d9 !important;
+                      text-align: center !important;
+                      border-radius: 10px !important ;
+                      border: 3px solid #BADA55 !important;
+                      padding: 20px 0 !important ;
+                      font-size: 150% !important;}
 
+.sitetitle {min-width: 50em !important; font-size: 200%; text-align: center;}
+.sitefooter {max-height; 3em !important; text-align: center !important;}
 
