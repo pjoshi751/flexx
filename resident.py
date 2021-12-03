@@ -3,7 +3,7 @@ Resident app
 """
 
 from flexx import event, flx
-from api_wrapper import get_rid_status, get_credential_types
+from api_wrapper import get_rid_status, get_credential_types, req_otp
 
 with open('style.css') as f:
     style = f.read()
@@ -14,6 +14,7 @@ class ResidentMain(flx.PyComponent):
 
     def __init__(self, *args, **kwargs):
         self.__kwargs = kwargs
+        self.last_txn_id = None
         super().__init__(*args, **kwargs)
 
     def init(self):
@@ -24,7 +25,15 @@ class ResidentMain(flx.PyComponent):
     def handle_rid_submitted(self, *events):
         rid = events[-1]['rid'] 
         status = get_rid_status(rid)
-        self.resident.set_status(f'Status: {status}')
+        self.resident.popup_window(f'Status: {status}')
+
+    @flx.reaction('resident.uin_submitted')
+    def handle_uin_submitted(self, *events):
+        uin = events[-1]['uin'] 
+        status, txn_id = req_otp(uin)
+        self.last_txn_id = txn_id
+        self.resident.popup_window(f'Status: {status}')
+
 
 class Resident(flx.Widget):
 
@@ -42,22 +51,29 @@ class Resident(flx.Widget):
                     self.label_e = flx.Label(text='Auth history', css_class='left_label')
                     flx.Widget(flex=1)  # space filler
                 with flx.StackLayout(flex=1) as self.stack:
+                    # RID status
                     with flx.FormLayout(css_class='form') as self.label_a.w:
-                        self.subtitle = flx.Label(text='RID status', css_class='subtitle')
+                        self.rid_subtitle = flx.Label(text='RID status', css_class='subtitle')
                         self.rid = \
                           flx.LineEdit(title='RID', text='')
                         self.submit = flx.Button(text='Submit')
 
                     self.label_b.w = flx.Widget(style='background:#fff')
                     self.label_c.w = flx.Widget(style='background:#fff;')
-                    self.label_d.w = flx.Widget(style='background:#fff;')
+                    # VID 
+                    with flx.FormLayout(css_class='form') as self.label_d.w:
+                        self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
+                        self.vid_subtitle2 = flx.Label(text='Enter your UIN number', css_class='subtitle')
+                        self.uin = \
+                          flx.LineEdit(title='UIN', text='')
+                        self.otp_submit = flx.Button(text='Get OTP')
                     self.label_e.w = flx.Widget(style='background:#fff;')
             flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
 
         self.current_label = self.label_a
 
     @flx.action
-    def set_status(self, text):
+    def popup_window(self, text):
         global window
         window.alert(text)
 
@@ -65,10 +81,19 @@ class Resident(flx.Widget):
     def rid_submitted(self, rid):
         return {'rid': rid}
 
+    @flx.emitter
+    def uin_submitted(self, uin):
+        return {'uin': uin}
+
     @flx.reaction('submit.pointer_click')
     def handle_rid_submit(self, *events):
         unused = events # noqa
         self.rid_submitted(self.rid.text)
+
+    @flx.reaction('otp_submit.pointer_click')
+    def handle_uin_submit(self, *events):
+        unused = events # noqa
+        self.uin_submitted(self.uin.text)
 
     @event.reaction('label_a.pointer_down', 'label_b.pointer_down', 'label_c.pointer_down', 'label_d.pointer_down',
                     'label_e.pointer_down')

@@ -57,7 +57,7 @@ def auth_get_client_token(server, appid, clientid, secret):
     token = read_token(r)
     return token
 
-def get_rid_status(server, token, rid):
+def get_rid_status(server, token, rid): 
     url = f'''{server}/resident/v1/rid/check-status'''
     ts = get_timestamp()
     cookies = {'Authorization' : token}
@@ -88,3 +88,23 @@ def get_credential_types(server, token):
     r = response_to_json(r)
     print(r)
 
+def req_otp(server, token, uin, txn_id):
+    url = f'''{server}/resident/v1/req/otp'''
+    ts = get_timestamp()
+    cookies = {'Authorization' : token}
+    j = {    
+        'id': 'mosip.identity.otp.internal',
+        'version': '1.0',
+        'transactionID': txn_id,
+        'requestTime': ts,
+        'individualId': uin,
+        'individualIdType': 'UIN',
+        'otpChannel': [
+          'EMAIL'
+        ],
+        'metadata': {}
+    }
+
+    r = requests.post(url, cookies=cookies, json = j, verify=True)
+    r = response_to_json(r)
+    return r
