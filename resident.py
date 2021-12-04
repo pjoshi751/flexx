@@ -3,7 +3,7 @@ Resident app
 """
 
 from flexx import event, flx
-from api_wrapper import get_rid_status, get_credential_types, req_otp
+from api_wrapper import get_rid_status, get_credential_types, req_otp, get_vid
 
 with open('style.css') as f:
     style = f.read()
@@ -14,8 +14,8 @@ class ResidentMain(flx.PyComponent):
 
     def __init__(self, *args, **kwargs):
         self.__kwargs = kwargs
-        self.last_txn_id = None
         super().__init__(*args, **kwargs)
+        self.txn_id_map = {}  # uin: txn_id TODO: find an alternate way
 
     def init(self):
         super().init()
@@ -30,10 +30,19 @@ class ResidentMain(flx.PyComponent):
     @flx.reaction('resident.uin_submitted')
     def handle_uin_submitted(self, *events):
         uin = events[-1]['uin'] 
-        status, txn_id = req_otp(uin)
-        self.last_txn_id = txn_id
+        success, status, txn_id = req_otp(uin)
+        self.txn_id_map[uin] = txn_id
         self.resident.popup_window(f'Status: {status}')
 
+    @flx.reaction('resident.vid_otp_submitted')
+    def handle_vid_otp_submitted(self, *events):
+        otp = events[-1]['otp'] 
+        uin = events[-1]['uin'] 
+        if uin not in self.txn_id_map:
+             self.resident.popup_window('Txn id not found for this UIN. Please request for OTP again')
+             return 
+        status = get_vid(uin, self.txn_id_map[uin], otp)
+        print(status)
 
 class Resident(flx.Widget):
 
@@ -64,9 +73,11 @@ class Resident(flx.Widget):
                     with flx.FormLayout(css_class='form') as self.label_d.w:
                         self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
                         self.vid_subtitle2 = flx.Label(text='Enter your UIN number', css_class='subtitle')
-                        self.uin = \
-                          flx.LineEdit(title='UIN', text='')
-                        self.otp_submit = flx.Button(text='Get OTP')
+                        self.uin = flx.LineEdit(title='UIN', text='')
+                        self.get_otp = flx.Button(text='Get OTP')
+                        flx.Widget(flex=1, style='min-height: 50px')
+                        self.vid_otp = flx.LineEdit(title='OTP', text='')
+                        self.vid_submit_otp = flx.Button(text='Submit')
                     self.label_e.w = flx.Widget(style='background:#fff;')
             flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
 
@@ -85,15 +96,24 @@ class Resident(flx.Widget):
     def uin_submitted(self, uin):
         return {'uin': uin}
 
+    @flx.emitter
+    def vid_otp_submitted(self, otp, uin):
+        return {'otp': otp, 'uin': uin}
+
     @flx.reaction('submit.pointer_click')
     def handle_rid_submit(self, *events):
         unused = events # noqa
         self.rid_submitted(self.rid.text)
 
-    @flx.reaction('otp_submit.pointer_click')
+    @flx.reaction('get_otp.pointer_click')
     def handle_uin_submit(self, *events):
         unused = events # noqa
         self.uin_submitted(self.uin.text)
+
+    @flx.reaction('vid_submit_otp.pointer_click')
+    def handle_vid_submit_otp_event(self, *events):
+        unused = events # noqa
+        self.vid_otp_submitted(self.vid_otp.text, self.uin.text)
 
     @event.reaction('label_a.pointer_down', 'label_b.pointer_down', 'label_c.pointer_down', 'label_d.pointer_down',
                     'label_e.pointer_down')

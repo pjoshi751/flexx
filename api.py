@@ -108,3 +108,23 @@ def req_otp(server, token, uin, txn_id):
     r = requests.post(url, cookies=cookies, json = j, verify=True)
     r = response_to_json(r)
     return r
+
+def get_vid(server, token, uin, txn_id, otp):
+    url = f'''{server}/resident/v1/vid'''
+    ts = get_timestamp()
+    cookies = {'Authorization' : token}
+    j = {    
+        'id': 'mosip.resident.vid',
+        'version': 'v1',
+        'requesttime': ts,
+        'request': {
+          'transactionID': txn_id,
+          'individualId': uin,
+          'individualIdType': 'UIN',
+          'otp': otp,
+          'vidType': 'Temporary'
+        }
+    }
+    r = requests.post(url, cookies=cookies, json = j, verify=True)
+    r = response_to_json(r)
+    return r
