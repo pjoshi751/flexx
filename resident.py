@@ -41,8 +41,10 @@ class ResidentMain(flx.PyComponent):
         if uin not in self.txn_id_map:
              self.resident.popup_window('Txn id not found for this UIN. Please request for OTP again')
              return 
-        status = get_vid(uin, self.txn_id_map[uin], otp)
-        print(status)
+        ok, vid, msg = get_vid(uin, self.txn_id_map[uin], otp)
+        if ok:
+           self.resident.clear_vid_uin() # Clear the UIN that user entered. We dont' want it be hanging around
+        self.resident.popup_window(f'VID: {vid}\n\n{msg}')
 
 class Resident(flx.Widget):
 
@@ -73,7 +75,7 @@ class Resident(flx.Widget):
                     with flx.FormLayout(css_class='form') as self.label_d.w:
                         self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
                         self.vid_subtitle2 = flx.Label(text='Enter your UIN number', css_class='subtitle')
-                        self.uin = flx.LineEdit(title='UIN', text='')
+                        self.vid_uin = flx.LineEdit(title='UIN', text='')
                         self.get_otp = flx.Button(text='Get OTP')
                         flx.Widget(flex=1, style='min-height: 50px')
                         self.vid_otp = flx.LineEdit(title='OTP', text='')
@@ -87,6 +89,10 @@ class Resident(flx.Widget):
     def popup_window(self, text):
         global window
         window.alert(text)
+
+    @flx.action
+    def clear_vid_uin(self):
+        self.vid_uin.set_text('')
 
     @flx.emitter
     def rid_submitted(self, rid):
@@ -108,12 +114,12 @@ class Resident(flx.Widget):
     @flx.reaction('get_otp.pointer_click')
     def handle_uin_submit(self, *events):
         unused = events # noqa
-        self.uin_submitted(self.uin.text)
+        self.uin_submitted(self.vid_uin.text)
 
     @flx.reaction('vid_submit_otp.pointer_click')
     def handle_vid_submit_otp_event(self, *events):
         unused = events # noqa
-        self.vid_otp_submitted(self.vid_otp.text, self.uin.text)
+        self.vid_otp_submitted(self.vid_otp.text, self.vid_uin.text)
 
     @event.reaction('label_a.pointer_down', 'label_b.pointer_down', 'label_c.pointer_down', 'label_d.pointer_down',
                     'label_e.pointer_down')

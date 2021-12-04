@@ -44,16 +44,16 @@ def req_otp(uin):
 
 def get_vid(uin, txn_id, otp):
     server = os.environ['SERVER']
+    ok = False
     try:
         token = api.auth_get_client_token(server, 'resident', os.environ['RESIDENT_CLIENT'], 
                                   os.environ['RESIDENT_SECRET'])
-        status = api.get_vid(server, token, uin, txn_id, otp)
-        print(status)
-        #if status['errors'] is None:
-        #    return True, 'OTP sent to your registered mobile and email', txn_id   # success
+        r = api.get_vid(server, token, uin, txn_id, otp)
+        if len(r['errors']) == 0:
+           return True, r['response']['vid'], r['response']['message']
     except:
         formatted_lines = traceback.format_exc()
         print(formatted_lines)
-        return False, 'EXCEPTION in code', txn_id
-    return False, status, txn_id
+        return False, '', 'EXCEPTION in code'
+    return False, '', str(r['errors'])
 
