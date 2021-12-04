@@ -19,8 +19,8 @@
 .sitetitle {min-width: 50em !important; font-size: 200%; text-align: center;}
 .sitefooter {max-height; 3em !important; text-align: center !important;}
 .border {border-width: 5px !important; border-color: red !important;}
-.flx-LineEdit {max-width: 40em !important}
 .form {padding: 150px !important; width: 1000px !important;}
-.form .flx-Button {width: 10em !important; position: relative; left: 30% !important; }
-.subtitle {font-weight: bold !important; position: relative !important; left: 35% !important; font-size: large !important;')
+.form .flx-Button {width: 10em !important; position: relative; left: 12% !important; }
+.flx-LineEdit {max-width: 20em !important}
+.subtitle {font-weight: bold !important; position: relative !important; left: 15% !important; font-size: large !important;'}
 

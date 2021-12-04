@@ -58,15 +58,14 @@ class Resident(flx.Widget):
                     self.label_a = flx.Label(text='RID status', css_class='left_label_selected')
                     self.label_b = flx.Label(text='Auth lock', css_class='left_label')
                     self.label_c = flx.Label(text='eCard', css_class='left_label')
-                    self.label_d = flx.Label(text='VID', css_class='left_label')
+                    self.label_d = flx.Label(text='Virtual ID', css_class='left_label')
                     self.label_e = flx.Label(text='Auth history', css_class='left_label')
                     flx.Widget(flex=1)  # space filler
                 with flx.StackLayout(flex=1) as self.stack:
                     # RID status
                     with flx.FormLayout(css_class='form') as self.label_a.w:
                         self.rid_subtitle = flx.Label(text='RID status', css_class='subtitle')
-                        self.rid = \
-                          flx.LineEdit(title='RID', text='')
+                        self.rid = flx.LineEdit(title='RID', text='')
                         self.submit = flx.Button(text='Submit')
 
                     self.label_b.w = flx.Widget(style='background:#fff')
@@ -74,12 +73,13 @@ class Resident(flx.Widget):
                     # VID 
                     with flx.FormLayout(css_class='form') as self.label_d.w:
                         self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
-                        self.vid_subtitle2 = flx.Label(text='Enter your UIN number', css_class='subtitle')
+                        self.vid_subtitle2 = flx.Label(text='Enter your UIN number')
                         self.vid_uin = flx.LineEdit(title='UIN', text='')
                         self.get_otp = flx.Button(text='Get OTP')
                         flx.Widget(flex=1, style='min-height: 50px')
                         self.vid_otp = flx.LineEdit(title='OTP', text='')
                         self.vid_submit_otp = flx.Button(text='Submit')
+
                     self.label_e.w = flx.Widget(style='background:#fff;')
             flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
 
