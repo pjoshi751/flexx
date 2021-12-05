@@ -68,6 +68,7 @@ class Resident(flx.Widget):
                         self.rid_subtitle = flx.Label(text='RID status', css_class='subtitle')
                         self.rid = flx.LineEdit(title='RID', text='')
                         self.submit = flx.Button(text='Submit')
+                        flx.Widget(flex=1)
 
                     # Auth lock TODO
                     self.label_b.w = flx.Widget(style='background:#fff')
@@ -80,7 +81,7 @@ class Resident(flx.Widget):
                         self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
                         self.vid_subtitle2 = flx.Label(text='Enter your UIN number')
                         self.vid_uin = flx.LineEdit(title='UIN', text='')
-                        self.get_otp = flx.Button(text='Get OTP')
+                        self.vid_get_otp = flx.Button(text='Get OTP')
                         flx.Widget(flex=1, style='min-height: 50px')
                         self.vid_otp = flx.LineEdit(title='OTP', text='')
                         self.vid_submit_otp = flx.Button(text='Submit')
@@ -98,7 +99,8 @@ class Resident(flx.Widget):
                         self.uin_otp = flx.LineEdit(title='OTP', text='')
                         self.uin_phone = flx.LineEdit(title='Phone', text='')
                         self.uin_dob = flx.LineEdit(title='Date of Birth (YYYY/MM/DD)', text='')
-                        self.uin_submit_otp = flx.Button(text='Update')
+                        self.uin_email = flx.LineEdit(title='Email', text='')
+                        self.uin_submit = flx.Button(text='Update')
             flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
 
         self.current_label = self.label_a
@@ -129,7 +131,7 @@ class Resident(flx.Widget):
         unused = events # noqa
         self.rid_submitted(self.rid.text)
 
-    @flx.reaction('get_otp.pointer_click')
+    @flx.reaction('vid_get_otp.pointer_click')
     def handle_uin_submit(self, *events):
         unused = events # noqa
         self.uin_submitted(self.vid_uin.text)
@@ -138,6 +140,10 @@ class Resident(flx.Widget):
     def handle_vid_submit_otp_event(self, *events):
         unused = events # noqa
         self.vid_otp_submitted(self.vid_otp.text, self.vid_uin.text)
+
+    @flx.reaction('uin_submit.pointer_click')
+    def handle_vid_submit_otp_event(self, *events):
+        unused = events # noqa
 
     @event.reaction('label_a.pointer_down', 'label_b.pointer_down', 'label_c.pointer_down', 'label_d.pointer_down',
                     'label_e.pointer_down', 'label_f.pointer_down')

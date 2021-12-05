@@ -7,14 +7,16 @@
              border: 3px solid #BADA55 !important;
              padding: 20px 0 !important ;
              font-size: 150% !important;}
-.left_label_selected {min-width: 300px !important;
-                      min-height: 50px !important;
-                      background: #9d9 !important;
-                      text-align: center !important;
-                      border-radius: 10px !important ;
-                      border: 3px solid #BADA55 !important;
-                      padding: 20px 0 !important ;
-                      font-size: 150% !important;}
+.left_label_selected {
+    min-width: 300px !important;
+    min-height: 50px !important;
+    background: #9d9 !important;
+    text-align: center !important;
+    border-radius: 10px !important ;
+    border: 3px solid #BADA55 !important;
+    padding: 20px 0 !important ;
+    font-size: 150% !important;
+}
 
 .sitetitle {min-width: 50em !important; font-size: 200%; text-align: center;}
 .sitefooter {max-height; 3em !important; text-align: center !important;}
