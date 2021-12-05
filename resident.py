@@ -46,6 +46,39 @@ class ResidentMain(flx.PyComponent):
            self.resident.clear_vid_uin() # Clear the UIN that user entered. We dont' want it be hanging around
         self.resident.popup_window(f'VID: {vid}\n\n{msg}')
 
+class MyButtons(flx.Widget):
+    def init(self):
+        with flx.VBox():
+            self.label_a = flx.Label(text='RID status', css_class='left_label_selected')
+            self.label_b = flx.Label(text='Auth lock', css_class='left_label')
+            self.label_c = flx.Label(text='eCard', css_class='left_label')
+            self.label_d = flx.Label(text='Virtual ID', css_class='left_label')
+            self.label_e = flx.Label(text='Auth history', css_class='left_label')
+            self.label_f = flx.Label(text='Update UIN', css_class='left_label')
+            flx.Widget(flex=1)  # space filler
+        self.current_label = self.label_a
+        self.label_a.index = 0
+        self.label_b.index = 1
+        self.label_c.index = 2
+        self.label_d.index = 3
+        self.label_e.index = 4
+        self.label_f.index = 5
+
+    @flx.emitter
+    def label_changed(self, i):
+        return {'index': i}
+
+    @event.reaction('label_a.pointer_down', 'label_b.pointer_down', 'label_c.pointer_down', 'label_d.pointer_down',
+                    'label_e.pointer_down', 'label_f.pointer_down')
+    def _stacked_current(self, *events):
+        cur = self.current_label
+        cur.set_css_class('left_label')  # Reset the color
+        cur  = events[-1].source  # New selected label
+        cur.set_css_class('left_label_selected')
+        self.current_label = cur
+        # self.stack.set_current(cur.w)
+        self.label_changed(cur.index)
+
 class Resident(flx.Widget):
 
     def init(self):
@@ -54,30 +87,28 @@ class Resident(flx.Widget):
                 flx.Label(text='Resident HelpDesk', css_class='sitetitle')
                 flx.ImageWidget(flex=1, source='https://www.omidyarnetwork.in/wp-content/uploads/2019/05/mosip.png', css_class='logo')
             with flx.HBox():
-                with flx.VBox():
-                    self.label_a = flx.Label(text='RID status', css_class='left_label_selected')
-                    self.label_b = flx.Label(text='Auth lock', css_class='left_label')
-                    self.label_c = flx.Label(text='eCard', css_class='left_label')
-                    self.label_d = flx.Label(text='Virtual ID', css_class='left_label')
-                    self.label_e = flx.Label(text='Auth history', css_class='left_label')
-                    self.label_f = flx.Label(text='Update UIN', css_class='left_label')
-                    flx.Widget(flex=1)  # space filler
+                self.mybuttons = MyButtons()
                 with flx.StackLayout(flex=1) as self.stack:
                     # RID status
-                    with flx.FormLayout(css_class='form') as self.label_a.w:
+                    self.stack_elements = []
+                    with flx.FormLayout(css_class='form') as w:
+                        self.stack_elements.append(w)
                         self.rid_subtitle = flx.Label(text='RID status', css_class='subtitle')
                         self.rid = flx.LineEdit(title='RID', text='')
                         self.submit = flx.Button(text='Submit')
                         flx.Widget(flex=1)
 
                     # Auth lock TODO
-                    self.label_b.w = flx.Widget(style='background:#fff')
+                    w = flx.Widget(style='background:#fff')
+                    self.stack_elements.append(w)
   
                     # eCard TODO
-                    self.label_c.w = flx.Widget(style='background:#fff;')
+                    w = flx.Widget(style='background:#fff;')
+                    self.stack_elements.append(w)
 
                     # VID 
-                    with flx.FormLayout(css_class='form') as self.label_d.w:
+                    with flx.FormLayout(css_class='form') as w:
+                        self.stack_elements.append(w)
                         self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
                         self.vid_subtitle2 = flx.Label(text='Enter your UIN number')
                         self.vid_uin = flx.LineEdit(title='UIN', text='')
@@ -87,10 +118,12 @@ class Resident(flx.Widget):
                         self.vid_submit_otp = flx.Button(text='Submit')
 
                     # Auth history TODO
-                    self.label_e.w = flx.Widget(style='background:#fff;')
+                    w = flx.Widget(style='background:#fff;')
+                    self.stack_elements.append(w)
 
                     # Update demographic info
-                    with flx.FormLayout(css_class='form') as self.label_f.w:
+                    with flx.FormLayout(css_class='form') as w:
+                        self.stack_elements.append(w)
                         self.uin_subtitle = flx.Label(text='Update your records', css_class='subtitle')
                         flx.Label(text='')
                         self.uin_uin = flx.LineEdit(title='UIN', text='')
@@ -103,7 +136,6 @@ class Resident(flx.Widget):
                         self.uin_submit = flx.Button(text='Update')
             flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
 
-        self.current_label = self.label_a
 
     @flx.action
     def popup_window(self, text):
@@ -145,6 +177,12 @@ class Resident(flx.Widget):
     def handle_vid_submit_otp_event(self, *events):
         unused = events # noqa
 
+    @event.reaction('mybuttons.label_changed')
+    def handle_label_change(self, *events):
+        ev = events[-1]
+        self.stack.set_current(self.stack_elements[ev.index])
+
+    '''
     @event.reaction('label_a.pointer_down', 'label_b.pointer_down', 'label_c.pointer_down', 'label_d.pointer_down',
                     'label_e.pointer_down', 'label_f.pointer_down')
     def _stacked_current(self, *events):
@@ -154,6 +192,7 @@ class Resident(flx.Widget):
         self.stack.set_current(cur.w)
         cur.set_css_class('left_label_selected')
         self.current_label = cur
+    '''
 
 def main(argv):
 
