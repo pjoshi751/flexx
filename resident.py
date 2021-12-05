@@ -15,7 +15,7 @@ class ResidentMain(flx.PyComponent):
     def __init__(self, *args, **kwargs):
         self.__kwargs = kwargs
         super().__init__(*args, **kwargs)
-        self.txn_id_map = {}  # uin: txn_id TODO: find an alternate way
+        self.txn_id_map = {}  # uin: txn_id TODO: find an alternate way. This will keep growing.
 
     def init(self):
         super().init()
@@ -60,6 +60,7 @@ class Resident(flx.Widget):
                     self.label_c = flx.Label(text='eCard', css_class='left_label')
                     self.label_d = flx.Label(text='Virtual ID', css_class='left_label')
                     self.label_e = flx.Label(text='Auth history', css_class='left_label')
+                    self.label_f = flx.Label(text='Update UIN', css_class='left_label')
                     flx.Widget(flex=1)  # space filler
                 with flx.StackLayout(flex=1) as self.stack:
                     # RID status
@@ -68,8 +69,12 @@ class Resident(flx.Widget):
                         self.rid = flx.LineEdit(title='RID', text='')
                         self.submit = flx.Button(text='Submit')
 
+                    # Auth lock TODO
                     self.label_b.w = flx.Widget(style='background:#fff')
+  
+                    # eCard TODO
                     self.label_c.w = flx.Widget(style='background:#fff;')
+
                     # VID 
                     with flx.FormLayout(css_class='form') as self.label_d.w:
                         self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
@@ -80,7 +85,20 @@ class Resident(flx.Widget):
                         self.vid_otp = flx.LineEdit(title='OTP', text='')
                         self.vid_submit_otp = flx.Button(text='Submit')
 
+                    # Auth history TODO
                     self.label_e.w = flx.Widget(style='background:#fff;')
+
+                    # Update demographic info
+                    with flx.FormLayout(css_class='form') as self.label_f.w:
+                        self.uin_subtitle = flx.Label(text='Update your records', css_class='subtitle')
+                        flx.Label(text='')
+                        self.uin_uin = flx.LineEdit(title='UIN', text='')
+                        self.uin_get_otp = flx.Button(text='Get OTP')
+                        flx.Label(text='')
+                        self.uin_otp = flx.LineEdit(title='OTP', text='')
+                        self.uin_phone = flx.LineEdit(title='Phone', text='')
+                        self.uin_dob = flx.LineEdit(title='Date of Birth (YYYY/MM/DD)', text='')
+                        self.uin_submit_otp = flx.Button(text='Update')
             flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
 
         self.current_label = self.label_a
@@ -122,7 +140,7 @@ class Resident(flx.Widget):
         self.vid_otp_submitted(self.vid_otp.text, self.vid_uin.text)
 
     @event.reaction('label_a.pointer_down', 'label_b.pointer_down', 'label_c.pointer_down', 'label_d.pointer_down',
-                    'label_e.pointer_down')
+                    'label_e.pointer_down', 'label_f.pointer_down')
     def _stacked_current(self, *events):
         cur = self.current_label
         cur.set_css_class('left_label')  # Reset the color
