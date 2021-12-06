@@ -46,38 +46,75 @@ class ResidentMain(flx.PyComponent):
            self.resident.clear_vid_uin() # Clear the UIN that user entered. We dont' want it be hanging around
         self.resident.popup_window(f'VID: {vid}\n\n{msg}')
 
-class MyButtons(flx.Widget):
-    def init(self):
-        with flx.VBox():
-            self.label_a = flx.Label(text='RID status', css_class='left_label_selected')
-            self.label_b = flx.Label(text='Auth lock', css_class='left_label')
-            self.label_c = flx.Label(text='eCard', css_class='left_label')
-            self.label_d = flx.Label(text='Virtual ID', css_class='left_label')
-            self.label_e = flx.Label(text='Auth history', css_class='left_label')
-            self.label_f = flx.Label(text='Update UIN', css_class='left_label')
-            flx.Widget(flex=1)  # space filler
-        self.current_label = self.label_a
-        self.label_a.index = 0
-        self.label_b.index = 1
-        self.label_c.index = 2
-        self.label_d.index = 3
-        self.label_e.index = 4
-        self.label_f.index = 5
+
+class MyButtons(flx.VBox):
+    def init(self, cls_label, cls_label_selected, label_texts):
+        super().init()
+        self.cls_label = cls_label
+        self.cls_label_selected = cls_label_selected
+        self.labels = [flx.Label(text=t, css_class=self.cls_label)
+                       for t in label_texts]
+        flx.Widget(flex=1)  # space filler
+        for i, label in enumerate(self.labels):
+            label.index = i
+        self.current_label = self.labels[0]
+        self.current_label.set_css_class(self.cls_label_selected)
 
     @flx.emitter
     def label_changed(self, i):
         return {'index': i}
 
-    @event.reaction('label_a.pointer_down', 'label_b.pointer_down', 'label_c.pointer_down', 'label_d.pointer_down',
-                    'label_e.pointer_down', 'label_f.pointer_down')
+    @flx.reaction('labels*.pointer_down')
     def _stacked_current(self, *events):
         cur = self.current_label
-        cur.set_css_class('left_label')  # Reset the color
+        cur.set_css_class(self.cls_label)  # Reset the color
         cur  = events[-1].source  # New selected label
-        cur.set_css_class('left_label_selected')
+        cur.set_css_class(self.cls_label_selected)
         self.current_label = cur
-        # self.stack.set_current(cur.w)
         self.label_changed(cur.index)
+
+
+class OTPLayout(flx.VBox):
+    def populate_otp(self):
+        with flx.StackLayout(flex=1) as self.stack:
+            with flx.FormLayout() as self.get_otp_form:
+                self.get_otp = flx.Button(text='Get OTP')
+                flx.Widget(flex=1)
+            with flx.FormLayout() as self.submit_otp_form:
+                self.otp = flx.LineEdit(title='OTP', text='')
+                self.submit_otp = flx.Button(text='Submit')
+                flx.Widget(flex=1)
+    @flx.reaction('get_otp.pointer_click')
+    def handle_get_otp(self, *events):
+        self.stack.set_current(self.submit_otp_form)
+        # TODO: emit the OTP request.
+    @flx.reaction('submit_otp.pointer_click')
+    def handle_submit_otp(self, *events):
+        self.otp_submitted()
+    @flx.emitter
+    def otp_submitted(self):
+        return {'otp': self.otp.text}
+    @flx.action
+    def reset_otp_form(self):
+        self.otp.set_text('')
+        self.stack.set_current(self.get_otp_form)
+
+
+class VidForm(OTPLayout):
+    def init(self):
+        super().init()
+        with flx.FormLayout():
+            self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
+            self.vid_uin = flx.LineEdit(title='UIN', text='')
+        self.populate_otp()
+        # flx.Widget(flex=1)
+    @flx.emitter
+    def otp_submitted(self):
+        v = super().otp_submitted()
+        # TODO: add other relevant form fields.
+        v.update({'vid_uin': self.vid_uin.text})
+        return v
+
 
 class Resident(flx.Widget):
 
@@ -87,7 +124,19 @@ class Resident(flx.Widget):
                 flx.Label(text='Resident HelpDesk', css_class='sitetitle')
                 flx.ImageWidget(flex=1, source='https://www.omidyarnetwork.in/wp-content/uploads/2019/05/mosip.png', css_class='logo')
             with flx.HBox():
-                self.mybuttons = MyButtons()
+                cls_label_selected = 'left_label_selected'
+                cls_label = 'left_label'
+                left_label_texts = ['RID status',
+                                    'Auth lock',
+                                    'eCard',
+                                    'Virtual ID',
+                                    'Virtual ID 2',
+                                    'Auth history',
+                                    'Update UIN',
+                                   ]
+                self.mybuttons = MyButtons(cls_label,
+                                           cls_label_selected,
+                                           left_label_texts)
                 with flx.StackLayout(flex=1) as self.stack:
                     # RID status
                     self.stack_elements = []
@@ -117,6 +166,9 @@ class Resident(flx.Widget):
                         self.vid_otp = flx.LineEdit(title='OTP', text='')
                         self.vid_submit_otp = flx.Button(text='Submit')
 
+                    self.vid_form_2 = VidForm(css_class='form')
+                    self.stack_elements.append(self.vid_form_2)
+
                     # Auth history TODO
                     w = flx.Widget(style='background:#fff;')
                     self.stack_elements.append(w)
@@ -136,6 +188,14 @@ class Resident(flx.Widget):
                         self.uin_submit = flx.Button(text='Update')
             flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
 
+
+    @flx.reaction('vid_form_2.otp_submitted')
+    def handle_vid_form_2_otp_submit(self, *events):
+        # TODO: probably emit something here?
+        print('handle_vid_form_2_otp_submit:')
+        for k, v in events[-1].items():
+            print(f'    {k}: {v}')
+        self.vid_form_2.reset_otp_form()
 
     @flx.action
     def popup_window(self, text):
