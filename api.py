@@ -2,6 +2,7 @@ import requests
 import datetime as dt
 import traceback
 import json
+import base64
 
 def get_timestamp(seconds_offset=None):
     '''
@@ -123,6 +124,30 @@ def get_vid(server, token, uin, txn_id, otp):
           'individualIdType': 'UIN',
           'otp': otp,
           'vidType': 'Temporary'
+        }
+    }
+    r = requests.post(url, cookies=cookies, json = j, verify=True)
+    r = response_to_json(r)
+    return r
+
+def update_uin(server, token, uin, txn_id, otp, identity):
+    """
+    identity:  Json as idntity json with subset of fields - the ones that need to be changed.
+    """
+    url = f'''{server}/resident/v1/req/update-uin'''
+    ts = get_timestamp()
+    cookies = {'Authorization' : token}
+
+    j = {    
+        'id': 'mosip.resident.updateuin',
+        'version': 'v1',
+        'requesttime': ts,
+        'request': {
+          'transactionID': txn_id,
+          'individualIdType': 'UIN',
+          'individualId': uin,
+          'otp': otp,
+          'identityJson': base64.b64encode(json.dumps(identity).encode('utf-8')).decode()
         }
     }
     r = requests.post(url, cookies=cookies, json = j, verify=True)

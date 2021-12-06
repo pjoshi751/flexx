@@ -3,7 +3,7 @@ Resident app
 """
 
 from flexx import event, flx
-from api_wrapper import get_rid_status, get_credential_types, req_otp, get_vid
+from api_wrapper import get_rid_status, get_credential_types, req_otp, get_vid, update_uin
 
 with open('style.css') as f:
     style = f.read()
@@ -47,6 +47,16 @@ class ResidentMain(flx.PyComponent):
            self.resident.clear_vid_uin() # Clear the UIN that user entered. We dont' want it be hanging around
         self.resident.popup_window(f'VID: {vid}\n\n{msg}')
 
+    @flx.reaction('resident.uin_update_otp_submitted')
+    def handle_uin_update_otp_submitted(self, *events):
+        otp = events[-1]['otp'] 
+        uin = events[-1]['uin'] 
+        fields = events[-1]['fields'] 
+        if uin not in self.txn_id_map:
+             self.resident.popup_window('Txn id not found for this UIN. Please request for OTP again')
+             return 
+        ok, msg = update_uin(uin, self.txn_id_map[uin], otp, fields)
+        self.resident.popup_window(f'Update UIN: {msg}')
 
 class MyButtons(flx.VBox):
     def init(self, cls_label, cls_label_selected, label_texts):
@@ -124,6 +134,24 @@ class VidForm(OTPLayout):
         v.update({'uin': self.uin.text})
         return v
 
+class UinUpdateForm(OTPLayout):
+    def init(self):
+        super().init()
+        with flx.FormLayout():
+            self.subtitle = flx.Label(text='Update your UIN details', css_class='subtitle')
+            self.phone = flx.LineEdit(title='Phone', text='')
+            self.email = flx.LineEdit(title='Email', text='')
+            self.dob = flx.LineEdit(title='Date of Birth (YYYY/MM/DD)', text='')
+        self.populate_otp()
+
+    '''
+    def otp_submitted(self):
+        v = super().otp_submitted()
+        # TODO: add other relevant form fields.
+        v.update({'uin': self.uin.text})
+        return v
+    '''
+
 
 class Resident(flx.Widget):
 
@@ -171,21 +199,10 @@ class Resident(flx.Widget):
                     w = flx.Widget(style='background:#fff;')
                     self.stack_elements.append(w)
 
-                    '''
-                    # Update demographic info
-                    with flx.FormLayout(css_class='form') as w:
-                        self.stack_elements.append(w)
-                        self.uin_subtitle = flx.Label(text='Update your records', css_class='subtitle')
-                        flx.Label(text='')
-                        self.uin_uin = flx.LineEdit(title='UIN', text='')
-                        self.uin_get_otp = flx.Button(text='Get OTP')
-                        flx.Label(text='')
-                        self.uin_otp = flx.LineEdit(title='OTP', text='')
-                        self.uin_phone = flx.LineEdit(title='Phone', text='')
-                        self.uin_dob = flx.LineEdit(title='Date of Birth (YYYY/MM/DD)', text='')
-                        self.uin_email = flx.LineEdit(title='Email', text='')
-                        self.uin_submit = flx.Button(text='Update')
-                    '''
+                    # Update UIN 
+                    self.uin_form = UinUpdateForm(css_class='form')
+                    self.stack_elements.append(self.uin_form)
+
             flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
 
     @flx.reaction('vid_form.get_otp_submitted')
@@ -194,8 +211,21 @@ class Resident(flx.Widget):
 
     @flx.reaction('vid_form.otp_submitted')
     def handle_vid_form_otp_submit(self, *events):
-        self.otp_submitted(self.vid_form.uin.text, self.vid_form.otp.text)
+        self.vid_otp_submitted(self.vid_form.uin.text, self.vid_form.otp.text)
         self.vid_form.reset_otp_form()
+
+    @flx.reaction('uin_form.get_otp_submitted')
+    def handle_uin_form_get_otp_submit(self, *events):
+        self.uin_submitted(self.uin_form.uin.text)  # emit
+
+    @flx.reaction('uin_form.otp_submitted')
+    def handle_uin_form_otp_submit(self, *events):
+        fields = {}
+        fields['phone'] = self.uin_form.phone.text 
+        fields['email'] = self.uin_form.email.text 
+        fields['dob'] = self.uin_form.dob.text 
+        self.uin_update_otp_submitted(self.uin_form.uin.text, self.uin_form.otp.text, fields)
+        self.uin_form.reset_otp_form()
 
     @flx.action
     def popup_window(self, text):
@@ -215,8 +245,12 @@ class Resident(flx.Widget):
         return {'uin': uin}
 
     @flx.emitter
-    def otp_submitted(self, uin, otp):
+    def vid_otp_submitted(self, uin, otp):
         return {'otp': otp, 'uin': uin}
+
+    @flx.emitter
+    def uin_update_otp_submitted(self, uin, otp, fields):
+        return {'uin': uin, 'otp': otp, 'fields': fields}
 
     @flx.reaction('rid_submit.pointer_click')
     def handle_rid_submit(self, *events):

@@ -3,6 +3,38 @@ import os
 import traceback
 import random
 
+SCHEMA_VERSION = 0.1
+def non_empty(a):
+    if len(a.strip()) > 0: 
+       return True
+    else:
+       return False
+    
+def filter_by_non_empty(d): # d: dict
+    out = {}
+    for k,v in d.items():
+        if non_empty(v):
+            out[k] = v
+    return out
+
+def create_identity_json(uin, fields):
+   """
+   Assumes string level validations have been performed on the fields before calling this func. No checks here.
+   """
+   iden = {
+       'identity': {
+           'IDSchemaVersion': SCHEMA_VERSION,
+           'UIN': uin,
+       }
+   }
+   fields = filter_by_non_empty(fields)
+   if len(fields) == 0: 
+     return None
+
+   iden['identity'].update(fields)
+
+   return iden
+
 def get_rid_status(rid):
     server = os.environ['SERVER']
     try:
@@ -56,4 +88,23 @@ def get_vid(uin, txn_id, otp):
         print(formatted_lines)
         return False, '', 'EXCEPTION in code'
     return False, '', str(r['errors'])
+
+def update_uin(uin, txn_id, otp, fields):
+    server = os.environ['SERVER']
+    ok = False
+    try:
+        token = api.auth_get_client_token(server, 'resident', os.environ['RESIDENT_CLIENT'], 
+                                  os.environ['RESIDENT_SECRET'])
+        iden = create_identity_json(uin, fields)
+        if iden is None:
+            return False, 'No update fields entered'
+        r = api.update_uin(server, token, uin, txn_id, otp, iden)
+        #if len(r['errors']) == 0:
+        #   return True, r['response']['vid'], r['response']['message']
+        return True, 'Dummy Success!'
+    except:
+        formatted_lines = traceback.format_exc()
+        print(formatted_lines)
+        return False, 'EXCEPTION in code'
+    return False, str(r['errors'])
 
