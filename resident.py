@@ -30,12 +30,13 @@ class ResidentMain(flx.PyComponent):
     @flx.reaction('resident.uin_submitted')
     def handle_uin_submitted(self, *events):
         uin = events[-1]['uin'] 
+        print(f'Event received at python uin = {uin}')
         success, status, txn_id = req_otp(uin)
         self.txn_id_map[uin] = txn_id
         self.resident.popup_window(f'Status: {status}')
 
-    @flx.reaction('resident.vid_otp_submitted')
-    def handle_vid_otp_submitted(self, *events):
+    @flx.reaction('resident.otp_submitted')
+    def handle_otp_submitted(self, *events):
         otp = events[-1]['otp'] 
         uin = events[-1]['uin'] 
         if uin not in self.txn_id_map:
@@ -84,16 +85,24 @@ class OTPLayout(flx.VBox):
                 self.otp = flx.LineEdit(title='OTP', text='')
                 self.submit_otp = flx.Button(text='Submit')
                 flx.Widget(flex=1)
+
     @flx.reaction('get_otp.pointer_click')
     def handle_get_otp(self, *events):
         self.stack.set_current(self.submit_otp_form)
-        # TODO: emit the OTP request.
+        self.get_otp_submitted() # emit
+
     @flx.reaction('submit_otp.pointer_click')
     def handle_submit_otp(self, *events):
         self.otp_submitted()
+
     @flx.emitter
     def otp_submitted(self):
         return {'otp': self.otp.text}
+
+    @flx.emitter
+    def get_otp_submitted(self):
+        return {}
+
     @flx.action
     def reset_otp_form(self):
         self.otp.set_text('')
@@ -105,14 +114,14 @@ class VidForm(OTPLayout):
         super().init()
         with flx.FormLayout():
             self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
-            self.vid_uin = flx.LineEdit(title='UIN', text='')
+            self.uin = flx.LineEdit(title='UIN', text='')
         self.populate_otp()
         # flx.Widget(flex=1)
     @flx.emitter
     def otp_submitted(self):
         v = super().otp_submitted()
         # TODO: add other relevant form fields.
-        v.update({'vid_uin': self.vid_uin.text})
+        v.update({'uin': self.uin.text})
         return v
 
 
@@ -188,13 +197,13 @@ class Resident(flx.Widget):
                         self.uin_submit = flx.Button(text='Update')
             flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
 
+    @flx.reaction('vid_form_2.get_otp_submitted')
+    def handle_vid_form_2_get_otp_submit(self, *events):
+        self.uin_submitted(self.vid_form_2.uin.text)  # emit
 
     @flx.reaction('vid_form_2.otp_submitted')
     def handle_vid_form_2_otp_submit(self, *events):
-        # TODO: probably emit something here?
-        print('handle_vid_form_2_otp_submit:')
-        for k, v in events[-1].items():
-            print(f'    {k}: {v}')
+        self.otp_submitted(self.vid_form_2.uin.text, self.vid_form_2.otp.text)
         self.vid_form_2.reset_otp_form()
 
     @flx.action
@@ -215,7 +224,7 @@ class Resident(flx.Widget):
         return {'uin': uin}
 
     @flx.emitter
-    def vid_otp_submitted(self, otp, uin):
+    def otp_submitted(self, uin, otp):
         return {'otp': otp, 'uin': uin}
 
     @flx.reaction('submit.pointer_click')
