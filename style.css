@@ -1,12 +1,14 @@
 .logo {max-width: 80px; max-height: 80px !important;}
-.left_label {min-width: 300px !important;
-             min-height: 50px !important;
-             background: #fff !important;
-             text-align: center !important;
-             border-radius: 10px !important ;
-             border: 3px solid #BADA55 !important;
-             padding: 20px 0 !important ;
-             font-size: 150% !important;}
+.left_label {
+    min-width: 300px !important;
+    min-height: 50px !important;
+    background: #fff !important;
+    text-align: center !important;
+    border-radius: 10px !important ;
+    border: 3px solid #BADA55 !important;
+    padding: 20px 0 !important ;
+    font-size: 150% !important;
+}
 .left_label_selected {
     min-width: 300px !important;
     min-height: 50px !important;
@@ -17,12 +19,35 @@
     padding: 20px 0 !important ;
     font-size: 150% !important;
 }
-
-.sitetitle {min-width: 50em !important; font-size: 200%; text-align: center;}
-.sitefooter {max-height; 3em !important; text-align: center !important;}
-.border {border-width: 5px !important; border-color: red !important;}
-.form {padding-left: 150px !important; width: 1000px !important;}
-.flx-Button {width: 10em !important; position: relative; left: 12% !important; }
-.flx-LineEdit {max-width: 20em !important}
-.subtitle {font-weight: bold !important; position: relative !important; left: 15% !important; font-size: large !important;'}
+.sitetitle {
+    min-width: 50em !important; 
+    font-size: 200%; 
+    text-align: center;
+}
+.sitefooter {
+    max-height; 3em !important; 
+    text-align: center !important;
+}
+.border {
+    border-width: 5px !important;
+    border-color: red !important;
+}
+.form {
+    padding-left: 150px !important; 
+    width: 1000px !important;
+}
+.flx-Button {
+    width: 10em !important; 
+    position: relative; 
+    left: 12% !important; 
+}
+.flx-LineEdit {
+    max-width: 20em !important
+}
+.subtitle {
+    font-weight: bold !important; 
+    position: relative !important; 
+    left: 15% !important; 
+    font-size: large !important;
+}
 

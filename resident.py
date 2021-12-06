@@ -15,7 +15,7 @@ class ResidentMain(flx.PyComponent):
     def __init__(self, *args, **kwargs):
         self.__kwargs = kwargs
         super().__init__(*args, **kwargs)
-        self.txn_id_map = {}  # uin: txn_id TODO: find an alternate way. This will keep growing.
+        self.txn_id_map = {}  # uin: txn_id TODO: find an alternate way. This will keep growing. 
 
     def init(self):
         super().init()
@@ -79,6 +79,7 @@ class OTPLayout(flx.VBox):
     def populate_otp(self):
         with flx.StackLayout(flex=1) as self.stack:
             with flx.FormLayout() as self.get_otp_form:
+                self.uin = flx.LineEdit(title='UIN', text='')
                 self.get_otp = flx.Button(text='Get OTP')
                 flx.Widget(flex=1)
             with flx.FormLayout() as self.submit_otp_form:
@@ -114,7 +115,6 @@ class VidForm(OTPLayout):
         super().init()
         with flx.FormLayout():
             self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
-            self.uin = flx.LineEdit(title='UIN', text='')
         self.populate_otp()
         # flx.Widget(flex=1)
     @flx.emitter
@@ -138,7 +138,7 @@ class Resident(flx.Widget):
                 left_label_texts = ['RID status',
                                     'Auth lock',
                                     'eCard',
-                                    'Virtual ID 2',
+                                    'Virtual ID',
                                     'Auth history',
                                     'Update UIN',
                                    ]
