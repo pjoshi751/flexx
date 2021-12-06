@@ -164,8 +164,8 @@ class Resident(flx.Widget):
                     self.stack_elements.append(w)
 
                     # VID
-                    self.vid_form_2 = VidForm(css_class='form')
-                    self.stack_elements.append(self.vid_form_2)
+                    self.vid_form = VidForm(css_class='form')
+                    self.stack_elements.append(self.vid_form)
 
                     # Auth history TODO
                     w = flx.Widget(style='background:#fff;')
@@ -188,14 +188,14 @@ class Resident(flx.Widget):
                     '''
             flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
 
-    @flx.reaction('vid_form_2.get_otp_submitted')
-    def handle_vid_form_2_get_otp_submit(self, *events):
-        self.uin_submitted(self.vid_form_2.uin.text)  # emit
+    @flx.reaction('vid_form.get_otp_submitted')
+    def handle_vid_form_get_otp_submit(self, *events):
+        self.uin_submitted(self.vid_form.uin.text)  # emit
 
-    @flx.reaction('vid_form_2.otp_submitted')
-    def handle_vid_form_2_otp_submit(self, *events):
-        self.otp_submitted(self.vid_form_2.uin.text, self.vid_form_2.otp.text)
-        self.vid_form_2.reset_otp_form()
+    @flx.reaction('vid_form.otp_submitted')
+    def handle_vid_form_otp_submit(self, *events):
+        self.otp_submitted(self.vid_form.uin.text, self.vid_form.otp.text)
+        self.vid_form.reset_otp_form()
 
     @flx.action
     def popup_window(self, text):
@@ -204,7 +204,7 @@ class Resident(flx.Widget):
 
     @flx.action
     def clear_vid_uin(self):
-        self.vid_form_2.uin.set_text('')
+        self.vid_form.uin.set_text('')
 
     @flx.emitter
     def rid_submitted(self, rid):
