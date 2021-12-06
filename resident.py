@@ -138,7 +138,6 @@ class Resident(flx.Widget):
                 left_label_texts = ['RID status',
                                     'Auth lock',
                                     'eCard',
-                                    'Virtual ID',
                                     'Virtual ID 2',
                                     'Auth history',
                                     'Update UIN',
@@ -153,7 +152,7 @@ class Resident(flx.Widget):
                         self.stack_elements.append(w)
                         self.rid_subtitle = flx.Label(text='RID status', css_class='subtitle')
                         self.rid = flx.LineEdit(title='RID', text='')
-                        self.submit = flx.Button(text='Submit')
+                        self.rid_submit = flx.Button(text='Submit')
                         flx.Widget(flex=1)
 
                     # Auth lock TODO
@@ -164,17 +163,7 @@ class Resident(flx.Widget):
                     w = flx.Widget(style='background:#fff;')
                     self.stack_elements.append(w)
 
-                    # VID 
-                    with flx.FormLayout(css_class='form') as w:
-                        self.stack_elements.append(w)
-                        self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
-                        self.vid_subtitle2 = flx.Label(text='Enter your UIN number')
-                        self.vid_uin = flx.LineEdit(title='UIN', text='')
-                        self.vid_get_otp = flx.Button(text='Get OTP')
-                        flx.Widget(flex=1, style='min-height: 50px')
-                        self.vid_otp = flx.LineEdit(title='OTP', text='')
-                        self.vid_submit_otp = flx.Button(text='Submit')
-
+                    # VID
                     self.vid_form_2 = VidForm(css_class='form')
                     self.stack_elements.append(self.vid_form_2)
 
@@ -182,6 +171,7 @@ class Resident(flx.Widget):
                     w = flx.Widget(style='background:#fff;')
                     self.stack_elements.append(w)
 
+                    '''
                     # Update demographic info
                     with flx.FormLayout(css_class='form') as w:
                         self.stack_elements.append(w)
@@ -195,6 +185,7 @@ class Resident(flx.Widget):
                         self.uin_dob = flx.LineEdit(title='Date of Birth (YYYY/MM/DD)', text='')
                         self.uin_email = flx.LineEdit(title='Email', text='')
                         self.uin_submit = flx.Button(text='Update')
+                    '''
             flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
 
     @flx.reaction('vid_form_2.get_otp_submitted')
@@ -213,7 +204,7 @@ class Resident(flx.Widget):
 
     @flx.action
     def clear_vid_uin(self):
-        self.vid_uin.set_text('')
+        self.vid_form_2.uin.set_text('')
 
     @flx.emitter
     def rid_submitted(self, rid):
@@ -227,41 +218,15 @@ class Resident(flx.Widget):
     def otp_submitted(self, uin, otp):
         return {'otp': otp, 'uin': uin}
 
-    @flx.reaction('submit.pointer_click')
+    @flx.reaction('rid_submit.pointer_click')
     def handle_rid_submit(self, *events):
         unused = events # noqa
         self.rid_submitted(self.rid.text)
-
-    @flx.reaction('vid_get_otp.pointer_click')
-    def handle_uin_submit(self, *events):
-        unused = events # noqa
-        self.uin_submitted(self.vid_uin.text)
-
-    @flx.reaction('vid_submit_otp.pointer_click')
-    def handle_vid_submit_otp_event(self, *events):
-        unused = events # noqa
-        self.vid_otp_submitted(self.vid_otp.text, self.vid_uin.text)
-
-    @flx.reaction('uin_submit.pointer_click')
-    def handle_vid_submit_otp_event(self, *events):
-        unused = events # noqa
 
     @event.reaction('mybuttons.label_changed')
     def handle_label_change(self, *events):
         ev = events[-1]
         self.stack.set_current(self.stack_elements[ev.index])
-
-    '''
-    @event.reaction('label_a.pointer_down', 'label_b.pointer_down', 'label_c.pointer_down', 'label_d.pointer_down',
-                    'label_e.pointer_down', 'label_f.pointer_down')
-    def _stacked_current(self, *events):
-        cur = self.current_label
-        cur.set_css_class('left_label')  # Reset the color
-        cur  = events[-1].source  # New selected label
-        self.stack.set_current(cur.w)
-        cur.set_css_class('left_label_selected')
-        self.current_label = cur
-    '''
 
 def main(argv):
 
