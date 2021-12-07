@@ -99,9 +99,25 @@ def update_uin(uin, txn_id, otp, fields):
         if iden is None:
             return False, 'No update fields entered'
         r = api.update_uin(server, token, uin, txn_id, otp, iden)
+        # TODO: Return value should be RID that should be given to user
         #if len(r['errors']) == 0:
         #   return True, r['response']['vid'], r['response']['message']
-        return True, 'Dummy Success!'
+        return True, 'Dummy success!'
+    except:
+        formatted_lines = traceback.format_exc()
+        print(formatted_lines)
+        return False, 'EXCEPTION in code'
+    return False, str(r['errors'])
+
+def get_auth_history(uin, txn_id, otp, nrecords):
+    server = os.environ['SERVER']
+    ok = False
+    try:
+        token = api.auth_get_client_token(server, 'resident', os.environ['RESIDENT_CLIENT'], 
+                                  os.environ['RESIDENT_SECRET'])
+        r = api.get_auth_history(server, token, uin, txn_id, otp, nrecords)
+        print(r)
+        return True, 'Dummy history!'
     except:
         formatted_lines = traceback.format_exc()
         print(formatted_lines)

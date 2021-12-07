@@ -1,0 +1,15 @@
+
+
+
+Validations:
+
+Field validations: date/time string
+Integer fields like number of records
+
+
+Auth History:
+
+- Display results
+- Give user option to select date range
+- Ability to sort by columns
+ 
