@@ -3,7 +3,7 @@ Resident app
 """
 
 from flexx import event, flx
-from api_wrapper import get_rid_status, get_credential_types, req_otp, get_vid, update_uin, get_auth_history
+from api_wrapper import get_rid_status, get_credential_types, req_otp, get_vid, update_uin, get_auth_history, auth_lock
 
 with open('style.css') as f:
     style = f.read()
@@ -69,6 +69,33 @@ class ResidentMain(flx.PyComponent):
         ok, history = get_auth_history(uin, self.txn_id_map[uin], otp, nrecords)
         self.resident.create_grid(history) 
 
+    @flx.reaction('resident.auth_lock_otp_submitted')
+    def handle_auth_lock_otp_submitted(self, *events):
+        e = events[-1]
+        otp = e['otp'] 
+        uin = e['uin'] 
+        action = e['selected_action']
+        auth_types = []
+        if len(e['auth_type1']) > 0:
+            auth_types.append(e['auth_type1'])
+        if len(e['auth_type2']) > 0:
+            auth_types.append(e['auth_type2'])
+        if len(e['auth_type3']) > 0:
+            auth_types.append(e['auth_type3'])
+        if len(e['auth_type4']) > 0:
+            auth_types.append(e['auth_type4'])
+
+        if uin not in self.txn_id_map:
+             self.resident.popup_window('Txn id not found for this UIN. Please request for OTP again')
+             return 
+        if action == 'Lock':
+            ok = auth_lock(uin, self.txn_id_map[uin], otp, auth_types)
+        elif action == 'Unlock':
+            ok = auth_unlock(uin, self.txn_id_map[uin], otp, action, auth_types)
+        else:
+             self.resident.popup_window('Lock or Unlock not specified in user action')
+             return 
+
 class MyButtons(flx.VBox):
     def init(self, cls_label, cls_label_selected, label_texts):
         super().init()
@@ -130,7 +157,6 @@ class OTPLayout(flx.VBox):
         self.otp.set_text('')
         self.stack.set_current(self.get_otp_form)
 
-
 class VidForm(OTPLayout):
     def init(self):
         super().init()
@@ -187,6 +213,32 @@ class AuthHistoryForm(OTPLayout):
                 flx.Label(text = i)
     '''
 
+class AuthLockForm(OTPLayout):
+    def init(self):
+        super().init()
+        self.selected_action = 'Lock'
+        with flx.FormLayout():
+            self.subtitle = flx.Label(text='Lock/Unlock Authentication', css_class='subtitle')
+            flx.Label(text='')  # Just a gap
+            with flx.VBox():
+                self.subtitle = flx.Label(text='Action:', css_class='checkbox')
+                self.r1 = flx.RadioButton(text='Lock')
+                self.r2 = flx.RadioButton(text='Unlock')
+            flx.Label(text='')  # Just a gap
+            with flx.VBox():
+                self.subtitle = flx.Label(text='Auth types:', css_class='checkbox')
+                self.cb1 = flx.CheckBox(text='demo', css_class='checkbox')
+                self.cb2 = flx.CheckBox(text='bio-Finger', css_class='checkbox')
+                self.cb3 = flx.CheckBox(text='bio-Iris', css_class='checkbox')
+                self.cb4 = flx.CheckBox(text='bio-Face', css_class='checkbox')
+                flx.Label(text='')  # Just a gap
+        self.populate_otp()
+
+    @flx.reaction('r1.checked', 'r2.checked')
+    def handle_radio_changed(self):
+        ev = events[-1]
+        self.selected_action = ev.source.text
+    
 class Resident(flx.Widget):
 
     def init(self):
@@ -217,9 +269,9 @@ class Resident(flx.Widget):
                         self.rid_submit = flx.Button(text='Submit')
                         flx.Widget(flex=1)
 
-                    # Auth lock TODO
-                    w = flx.Widget(style='background:#fff')
-                    self.stack_elements.append(w)
+                    # Auth lock
+                    self.auth_lock = AuthLockForm(css_class='form')
+                    self.stack_elements.append(self.auth_lock)
   
                     # eCard TODO
                     w = flx.Widget(style='background:#fff;')
@@ -262,13 +314,35 @@ class Resident(flx.Widget):
         self.uin_form.reset_otp_form()
 
     @flx.reaction('history_form.get_otp_submitted')
-    def handle_hitory_form_get_otp_submit(self, *events):
+    def handle_history_form_get_otp_submit(self, *events):
         self.uin_submitted(self.history_form.uin.text)  # emit
 
     @flx.reaction('history_form.otp_submitted')
     def handle_history_form_otp_submit(self, *events):
         self.history_form_otp_submitted(self.history_form.uin.text, self.history_form.otp.text, self.history_form.nrecords.text)
         self.history_form.reset_otp_form()
+
+    @flx.reaction('auth_lock.get_otp_submitted')
+    def handle_auth_lock_get_otp_submit(self, *events):
+        self.uin_submitted(self.auth_lock.uin.text)  # emit
+
+    @flx.reaction('auth_lock.otp_submitted')
+    def handle_auth_lock_otp_submit(self, *events):
+        w = self.auth_lock
+        cb1,cb2,cb3,cb4 = '','','','',''
+        if w.cb1.checked:
+            cb1 = w.cb1.text
+        if w.cb2.checked:
+            cb2 = w.cb2.text
+        if w.cb3.checked:
+            cb3 = w.cb3.text
+        if w.cb4.checked:
+            cb4 = w.cb4.text
+
+        self.auth_lock_otp_submitted(w.uin.text, w.otp.text, w.selected_action, cb1, cb2, cb3, cb4)
+        self.auth_lock.reset_otp_form()
+
+
 
     @flx.action
     def popup_window(self, text):
@@ -303,6 +377,10 @@ class Resident(flx.Widget):
     def history_form_otp_submitted(self, uin, otp, nrecords):
         return {'uin': uin, 'otp': otp, 'nrecords': nrecords}
 
+    @flx.emitter
+    def auth_lock_otp_submitted(self, uin, otp, action, cb1, cb2, cb3, cb4):
+        return {'uin': uin, 'otp': otp, 'selected_action': action, 'auth_type1': cb1, 'auth_type2': cb2, 
+                'auth_type3': cb3, 'auth_type4': cb4}
 
     @flx.reaction('rid_submit.pointer_click')
     def handle_rid_submit(self, *events):

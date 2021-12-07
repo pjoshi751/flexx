@@ -173,3 +173,25 @@ def get_auth_history(server, token, uin, txn_id, otp, nrecords, start_page='1'):
     r = requests.post(url, cookies=cookies, json = j, verify=True)
     r = response_to_json(r)
     return r
+    
+def auth_lock(server, token, uin, txn_id, otp, auth_types):
+    url = f'''{server}/resident/v1/req/auth-lock'''
+    ts = get_timestamp()
+    cookies = {'Authorization' : token}
+    print('API:')
+    print(auth_types)
+    j = {    
+        'id': 'mosip.resident.authlock',
+        'version': 'v1',
+        'requesttime': ts,
+        'request': {
+          'transactionID': txn_id,
+          'individualId': uin,
+          'individualIdType': 'UIN',
+          'otp': otp,
+          'authType': auth_types
+        }
+    }
+    r = requests.post(url, cookies=cookies, json = j, verify=True)
+    r = response_to_json(r)
+    return r

@@ -143,3 +143,21 @@ def get_auth_history(uin, txn_id, otp, nrecords):
         return False, 'EXCEPTION in code'
     return False, str(r['errors'])
 
+def auth_lock(uin, txn_id, otp, auth_types): 
+    server = os.environ['SERVER']
+    ok = False
+    try:
+        token = api.auth_get_client_token(server, 'resident', os.environ['RESIDENT_CLIENT'], 
+                                  os.environ['RESIDENT_SECRET'])
+        r = api.auth_lock(server, token, uin, txn_id, otp, auth_types)
+        print(r)
+        #if r['errors'] is None:
+        #    return True 
+    except:
+        formatted_lines = traceback.format_exc()
+        print(formatted_lines)
+        return False, 'EXCEPTION in code'
+
+    return False, str(r['errors'])
+
+

@@ -12,4 +12,7 @@ Auth History:
 - Display results
 - Give user option to select date range
 - Ability to sort by columns
+
+Auth Lock:
+Can user lock OTP.  Will resident portal work then!?
  
