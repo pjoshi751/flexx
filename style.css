@@ -50,4 +50,7 @@
     left: 15% !important; 
     font-size: large !important;
 }
-
+.gridLabel > .flx-Label {
+    border: 1px solid #BADA55 !important;
+    max-height: 2em !important;
+}

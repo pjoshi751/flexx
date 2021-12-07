@@ -67,7 +67,7 @@ class ResidentMain(flx.PyComponent):
              self.resident.popup_window('Txn id not found for this UIN. Please request for OTP again')
              return 
         ok, history = get_auth_history(uin, self.txn_id_map[uin], otp, nrecords)
-        self.resident.popup_window(f'Update UIN: {history}')
+        self.resident.create_grid(history) 
 
 class MyButtons(flx.VBox):
     def init(self, cls_label, cls_label_selected, label_texts):
@@ -171,6 +171,21 @@ class AuthHistoryForm(OTPLayout):
             self.nrecords = flx.LineEdit(title='Number of records', text='10')
         self.populate_otp()
 
+    @flx.emitter
+    def create_grid(self, history):
+        return {'history': history}
+
+    '''
+    #TODO: this doesn't work
+    @flx.reaction('create_grid')
+    def handle_create_grid(self, *events):
+        print('EVENT REACHED AUTH HISTORY')
+        history = events[-1]['history']
+        print(history)
+        with flx.GridLayout(ncolumns=9, css_class='gridLabel'):
+            for i in history:
+                flx.Label(text = i)
+    '''
 
 class Resident(flx.Widget):
 
@@ -264,6 +279,10 @@ class Resident(flx.Widget):
     def clear_vid_uin(self):
         self.vid_form.uin.set_text('')
 
+    @flx.action
+    def create_grid(self, history):
+        self.history_form.create_grid(history)
+
     @flx.emitter
     def rid_submitted(self, rid):
         return {'rid': rid}
@@ -283,6 +302,7 @@ class Resident(flx.Widget):
     @flx.emitter
     def history_form_otp_submitted(self, uin, otp, nrecords):
         return {'uin': uin, 'otp': otp, 'nrecords': nrecords}
+
 
     @flx.reaction('rid_submit.pointer_click')
     def handle_rid_submit(self, *events):

@@ -2,8 +2,27 @@ import api
 import os
 import traceback
 import random
+from collections import OrderedDict
 
 SCHEMA_VERSION = 0.1
+def flatten_auth_response(r):
+    '''
+    r:  List of dicts containing each row
+    '''
+    table = OrderedDict()
+    for k,v in r[0].items():  # first row 
+        table[k] = []
+
+    flattened = []
+    # header row first
+    for k in table:
+        flattened.append(k)
+
+    for row in r:
+        for k,v in row.items():
+            flattened.append(v)
+    return flattened
+
 def non_empty(a):
     if len(a.strip()) > 0: 
        return True
@@ -116,8 +135,8 @@ def get_auth_history(uin, txn_id, otp, nrecords):
         token = api.auth_get_client_token(server, 'resident', os.environ['RESIDENT_CLIENT'], 
                                   os.environ['RESIDENT_SECRET'])
         r = api.get_auth_history(server, token, uin, txn_id, otp, nrecords)
-        print(r)
-        return True, 'Dummy history!'
+        if r['errors'] is None:
+            return True, flatten_auth_response(r['response']['authHistory'])
     except:
         formatted_lines = traceback.format_exc()
         print(formatted_lines)
