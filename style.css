@@ -20,13 +20,14 @@
     font-size: 150% !important;
 }
 .sitetitle {
-    min-width: 40em !important; 
+    min-width: 30em !important; 
     font-size: 200%; 
     text-align: center;
 }
 .sitefooter {
     max-height; 3em !important; 
-    text-align: center !important;
+    /* text-align: center !important; */
+    left: 25% !important;
 }
 .border {
     border-width: 5px !important;
@@ -37,6 +38,11 @@
     width: 1000px !important;
 }
 .flx-Button {
+    width: 10em !important; 
+    position: relative; 
+    left: 20% !important; 
+}
+.submit {
     width: 10em !important; 
     position: relative; 
     left: 10% !important; 

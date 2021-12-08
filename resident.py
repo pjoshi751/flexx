@@ -128,12 +128,12 @@ class OTPLayout(flx.VBox):
     def populate_otp(self):
         with flx.StackLayout(flex=1) as self.stack:
             with flx.FormLayout() as self.get_otp_form:
-                #self.uin = flx.LineEdit(title='UIN', text='')
+                flx.Label(text='')
                 self.get_otp = flx.Button(text='Get OTP')
                 flx.Widget(flex=1)
             with flx.FormLayout() as self.submit_otp_form:
                 self.otp = flx.LineEdit(title='OTP', text='')
-                self.submit_otp = flx.Button(text='Submit')
+                self.submit_otp = flx.Button(text='Submit', css_class='submit')
                 flx.Widget(flex=1)
 
     @flx.reaction('get_otp.pointer_click')
@@ -163,6 +163,7 @@ class VidForm(OTPLayout):
         super().init()
         with flx.FormLayout():
             self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
+            self.uin = flx.LineEdit(title='UIN', text='')
         self.populate_otp()
         # flx.Widget(flex=1)
     @flx.emitter
@@ -180,6 +181,7 @@ class UinUpdateForm(OTPLayout):
             self.phone = flx.LineEdit(title='Phone', text='')
             self.email = flx.LineEdit(title='Email', text='')
             self.dob = flx.LineEdit(title='Date of Birth (YYYY/MM/DD)', text='')
+            self.uin = flx.LineEdit(title='UIN', text='')
         self.populate_otp()
 
     def otp_submitted(self):
@@ -194,6 +196,7 @@ class AuthHistoryForm(OTPLayout):
         with flx.FormLayout():
             self.subtitle = flx.Label(text='Fetch your Auth history', css_class='subtitle')
             self.nrecords = flx.LineEdit(title='Number of records', text='10')
+            self.uin = flx.LineEdit(title='UIN', text='')
         self.populate_otp()
 
     @flx.emitter
@@ -268,7 +271,7 @@ class Resident(flx.Widget):
                         flx.Label(title='', text='')
                         self.rid = flx.LineEdit(title='RID', text='')
                         flx.Label(title='', text='')
-                        self.rid_submit = flx.Button(text='Submit')
+                        self.rid_submit = flx.Button(text='Submit', css_class='submit')
                         flx.Widget(flex=1)
 
                     # Auth lock
