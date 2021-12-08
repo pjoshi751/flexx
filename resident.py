@@ -252,7 +252,7 @@ class Resident(flx.Widget):
             with flx.HBox():
                 cls_label_selected = 'left_label_selected'
                 cls_label = 'left_label'
-                left_label_texts = ['RID status',
+                left_label_texts = ['Registration status',
                                     'Auth lock',
                                     'eCard',
                                     'Virtual ID',

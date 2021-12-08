@@ -20,9 +20,11 @@
     font-size: 150% !important;
 }
 .sitetitle {
-    min-width: 30em !important; 
-    font-size: 200%; 
-    text-align: center;
+    min-width: 20em !important; 
+    font-size: 250%; 
+    left: 15% !important;
+    font-family: Monaco !important;
+    color: #8b008b !important;
 }
 .sitefooter {
     max-height; 3em !important; 
