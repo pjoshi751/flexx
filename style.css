@@ -20,7 +20,7 @@
     font-size: 150% !important;
 }
 .sitetitle {
-    min-width: 50em !important; 
+    min-width: 40em !important; 
     font-size: 200%; 
     text-align: center;
 }
@@ -39,7 +39,7 @@
 .flx-Button {
     width: 10em !important; 
     position: relative; 
-    left: 12% !important; 
+    left: 10% !important; 
 }
 .flx-LineEdit {
     max-width: 20em !important

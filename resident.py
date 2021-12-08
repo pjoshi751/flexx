@@ -182,13 +182,11 @@ class UinUpdateForm(OTPLayout):
             self.dob = flx.LineEdit(title='Date of Birth (YYYY/MM/DD)', text='')
         self.populate_otp()
 
-    '''
     def otp_submitted(self):
         v = super().otp_submitted()
         # TODO: add other relevant form fields.
         v.update({'uin': self.uin.text})
         return v
-    '''
 
 class AuthHistoryForm(OTPLayout):
     def init(self):
@@ -246,7 +244,7 @@ class Resident(flx.Widget):
         with flx.VBox():
             with flx.HBox():
                 flx.Label(text='Resident HelpDesk', css_class='sitetitle')
-                flx.ImageWidget(flex=1, source='https://www.omidyarnetwork.in/wp-content/uploads/2019/05/mosip.png', css_class='logo')
+                flx.ImageWidget(flex=1,source='https://www.omidyarnetwork.in/wp-content/uploads/2019/05/mosip.png', css_class='logo')
             with flx.HBox():
                 cls_label_selected = 'left_label_selected'
                 cls_label = 'left_label'
@@ -266,7 +264,9 @@ class Resident(flx.Widget):
                     with flx.FormLayout(css_class='form') as w:
                         self.stack_elements.append(w)
                         self.rid_subtitle = flx.Label(text='RID status', css_class='subtitle')
+                        flx.Label(title='', text='')
                         self.rid = flx.LineEdit(title='RID', text='')
+                        flx.Label(title='', text='')
                         self.rid_submit = flx.Button(text='Submit')
                         flx.Widget(flex=1)
 
