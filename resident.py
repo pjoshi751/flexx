@@ -128,7 +128,7 @@ class OTPLayout(flx.VBox):
     def populate_otp(self):
         with flx.StackLayout(flex=1) as self.stack:
             with flx.FormLayout() as self.get_otp_form:
-                self.uin = flx.LineEdit(title='UIN', text='')
+                #self.uin = flx.LineEdit(title='UIN', text='')
                 self.get_otp = flx.Button(text='Get OTP')
                 flx.Widget(flex=1)
             with flx.FormLayout() as self.submit_otp_form:
@@ -221,9 +221,9 @@ class AuthLockForm(OTPLayout):
             flx.Label(text='')  # Just a gap
             with flx.VBox():
                 self.subtitle = flx.Label(text='Action:', css_class='checkbox')
-                self.r1 = flx.RadioButton(text='Lock')
-                self.r2 = flx.RadioButton(text='Unlock')
-                self.seconds = flx.LineEdit(title='seconds', text='86400', style='visiblity: hidden')
+                self.r1 = flx.RadioButton(text='Lock', css_class='checkbox')
+                self.r2 = flx.RadioButton(text='Unlock', css_class='checkbox')
+            self.seconds = flx.LineEdit(title='seconds', text='86400')
             flx.Label(text='')  # Just a gap
             with flx.VBox():
                 self.subtitle = flx.Label(text='Auth types:', css_class='checkbox')
@@ -232,6 +232,7 @@ class AuthLockForm(OTPLayout):
                 self.cb3 = flx.CheckBox(text='bio-Iris', css_class='checkbox')
                 self.cb4 = flx.CheckBox(text='bio-Face', css_class='checkbox')
                 flx.Label(text='')  # Just a gap
+            self.uin = flx.LineEdit(title='UIN', text='')
         self.populate_otp()
 
     @flx.reaction('r1.checked', 'r2.checked')
