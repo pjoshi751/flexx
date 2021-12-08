@@ -15,4 +15,7 @@ Auth History:
 
 Auth Lock:
 Can user lock OTP.  Will resident portal work then!?
+
+Auth unlock:
+User input for how long should the unlock be applied - seconds
  

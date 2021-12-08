@@ -160,4 +160,21 @@ def auth_lock(uin, txn_id, otp, auth_types):
 
     return False, str(r['errors'])
 
+def auth_unlock(uin, txn_id, otp, auth_types, seconds): 
+    server = os.environ['SERVER']
+    ok = False
+    try:
+        token = api.auth_get_client_token(server, 'resident', os.environ['RESIDENT_CLIENT'], 
+                                  os.environ['RESIDENT_SECRET'])
+        r = api.auth_unlock(server, token, uin, txn_id, otp, auth_types, seconds)
+        print(r)
+        #if r['errors'] is None:
+        #    return True 
+    except:
+        formatted_lines = traceback.format_exc()
+        print(formatted_lines)
+        return False, 'EXCEPTION in code'
+
+    return False, str(r['errors'])
+
 

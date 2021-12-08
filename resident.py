@@ -75,6 +75,7 @@ class ResidentMain(flx.PyComponent):
         otp = e['otp'] 
         uin = e['uin'] 
         action = e['selected_action']
+        seconds = e['seconds']
         auth_types = []
         if len(e['auth_type1']) > 0:
             auth_types.append(e['auth_type1'])
@@ -91,7 +92,7 @@ class ResidentMain(flx.PyComponent):
         if action == 'Lock':
             ok = auth_lock(uin, self.txn_id_map[uin], otp, auth_types)
         elif action == 'Unlock':
-            ok = auth_unlock(uin, self.txn_id_map[uin], otp, action, auth_types)
+            ok = auth_unlock(uin, self.txn_id_map[uin], otp, action, auth_types, seconds)
         else:
              self.resident.popup_window('Lock or Unlock not specified in user action')
              return 
@@ -224,6 +225,7 @@ class AuthLockForm(OTPLayout):
                 self.subtitle = flx.Label(text='Action:', css_class='checkbox')
                 self.r1 = flx.RadioButton(text='Lock')
                 self.r2 = flx.RadioButton(text='Unlock')
+                self.seconds = flx.LineEdit(title='seconds', text='86400', style='visiblity: hidden')
             flx.Label(text='')  # Just a gap
             with flx.VBox():
                 self.subtitle = flx.Label(text='Auth types:', css_class='checkbox')
@@ -240,7 +242,6 @@ class AuthLockForm(OTPLayout):
         self.selected_action = ev.source.text
     
 class Resident(flx.Widget):
-
     def init(self):
         with flx.VBox():
             with flx.HBox():
@@ -339,7 +340,7 @@ class Resident(flx.Widget):
         if w.cb4.checked:
             cb4 = w.cb4.text
 
-        self.auth_lock_otp_submitted(w.uin.text, w.otp.text, w.selected_action, cb1, cb2, cb3, cb4)
+        self.auth_lock_otp_submitted(w.uin.text, w.otp.text, w.selected_action, cb1, cb2, cb3, cb4, w.seconds.text)
         self.auth_lock.reset_otp_form()
 
 
@@ -378,9 +379,9 @@ class Resident(flx.Widget):
         return {'uin': uin, 'otp': otp, 'nrecords': nrecords}
 
     @flx.emitter
-    def auth_lock_otp_submitted(self, uin, otp, action, cb1, cb2, cb3, cb4):
+    def auth_lock_otp_submitted(self, uin, otp, action, cb1, cb2, cb3, cb4, seconds):
         return {'uin': uin, 'otp': otp, 'selected_action': action, 'auth_type1': cb1, 'auth_type2': cb2, 
-                'auth_type3': cb3, 'auth_type4': cb4}
+                'auth_type3': cb3, 'auth_type4': cb4, 'seconds': seconds}
 
     @flx.reaction('rid_submit.pointer_click')
     def handle_rid_submit(self, *events):

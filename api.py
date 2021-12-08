@@ -195,3 +195,24 @@ def auth_lock(server, token, uin, txn_id, otp, auth_types):
     r = requests.post(url, cookies=cookies, json = j, verify=True)
     r = response_to_json(r)
     return r
+
+def auth_unlock(server, token, uin, txn_id, otp, auth_types, seconds):
+    url = f'''{server}/resident/v1/req/auth-unlock'''
+    ts = get_timestamp()
+    cookies = {'Authorization' : token}
+    j = {    
+        'id': 'mosip.resident.authlock',
+        'version': 'v1',
+        'requesttime': ts,
+        'request': {
+          'transactionID': txn_id,
+          'individualId': uin,
+          'individualIdType': 'UIN',
+          'otp': otp,
+          'authType': auth_types,
+          'unlockForSeconds': str(seconds)
+        }
+    }
+    r = requests.post(url, cookies=cookies, json = j, verify=True)
+    r = response_to_json(r)
+    return r
