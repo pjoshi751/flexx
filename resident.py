@@ -35,7 +35,7 @@ class ResidentMain(flx.PyComponent):
         self.txn_id_map[uin] = txn_id
         self.resident.popup_window(f'Status: {status}')
 
-    @flx.reaction('resident.otp_submitted')
+    @flx.reaction('resident.vid_otp_submitted')
     def handle_otp_submitted(self, *events):
         otp = events[-1]['otp'] 
         uin = events[-1]['uin'] 
@@ -184,6 +184,7 @@ class UinUpdateForm(OTPLayout):
             self.uin = flx.LineEdit(title='UIN', text='')
         self.populate_otp()
 
+    @flx.emitter
     def otp_submitted(self):
         v = super().otp_submitted()
         # TODO: add other relevant form fields.
@@ -255,6 +256,7 @@ class Resident(flx.Widget):
                 left_label_texts = ['Registration status',
                                     'Auth lock',
                                     'eCard',
+                                    'Print Card',
                                     'Virtual ID',
                                     'Auth history',
                                     'Update UIN',
@@ -279,6 +281,10 @@ class Resident(flx.Widget):
                     self.stack_elements.append(self.auth_lock)
   
                     # eCard TODO
+                    w = flx.Widget(style='background:#fff;')
+                    self.stack_elements.append(w)
+
+                    # Print card  TODO
                     w = flx.Widget(style='background:#fff;')
                     self.stack_elements.append(w)
 
