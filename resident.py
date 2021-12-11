@@ -2,7 +2,7 @@
 Resident app
 """
 
-from flexx import event, flx
+from flexx import event, flx, config
 from api_wrapper import get_rid_status, get_credential_types, req_otp, get_vid, update_uin, get_auth_history
 
 with open('style.css') as f:
@@ -395,6 +395,7 @@ def main(argv):
     app = flx.App(ResidentMain,
                   title='Resident Portal') # , icon=ico)
     # app.export('test.html', link=0)
+    config.hostname = '0.0.0.0'
     app.serve('')
     #app.launch('browser')
     flx.run()
