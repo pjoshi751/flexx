@@ -4,6 +4,11 @@ import traceback
 import random
 from collections import OrderedDict
 
+# Export the following env variables:
+# SERVER: https://api-internal.v3box1.mosip.net
+# RESIDENT_CLIENT: mosip-resident-client
+# RESIDENT_SECRET: xyz 
+
 SCHEMA_VERSION = 0.1
 def flatten_auth_response(r):
     '''

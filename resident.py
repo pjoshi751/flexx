@@ -3,7 +3,7 @@ Resident app
 """
 
 from flexx import event, flx
-from api_wrapper import get_rid_status, get_credential_types, req_otp, get_vid, update_uin, get_auth_history, auth_lock
+from api_wrapper import get_rid_status, get_credential_types, req_otp, get_vid, update_uin, get_auth_history
 
 with open('style.css') as f:
     style = f.read()
@@ -30,7 +30,6 @@ class ResidentMain(flx.PyComponent):
     @flx.reaction('resident.uin_submitted')
     def handle_uin_submitted(self, *events):
         uin = events[-1]['uin'] 
-        print(f'Event received at python uin = {uin}')
         success, status, txn_id = req_otp(uin)
         self.txn_id_map[uin] = txn_id
         self.resident.popup_window(f'Status: {status}')
@@ -45,7 +44,7 @@ class ResidentMain(flx.PyComponent):
         ok, vid, msg = get_vid(uin, self.txn_id_map[uin], otp)
         if ok:
            self.resident.clear_vid_uin() # Clear the UIN that user entered. We dont' want it be hanging around
-        self.resident.popup_window(f'VID: {vid}\n\n{msg}')
+        self.resident.popup_window(f'VID: {vid}\n\n{msg}\n\nSave the above number')
 
     @flx.reaction('resident.uin_update_otp_submitted')
     def handle_uin_update_otp_submitted(self, *events):
@@ -68,34 +67,6 @@ class ResidentMain(flx.PyComponent):
              return 
         ok, history = get_auth_history(uin, self.txn_id_map[uin], otp, nrecords)
         self.resident.create_grid(history) 
-
-    @flx.reaction('resident.auth_lock_otp_submitted')
-    def handle_auth_lock_otp_submitted(self, *events):
-        e = events[-1]
-        otp = e['otp'] 
-        uin = e['uin'] 
-        action = e['selected_action']
-        seconds = e['seconds']
-        auth_types = []
-        if len(e['auth_type1']) > 0:
-            auth_types.append(e['auth_type1'])
-        if len(e['auth_type2']) > 0:
-            auth_types.append(e['auth_type2'])
-        if len(e['auth_type3']) > 0:
-            auth_types.append(e['auth_type3'])
-        if len(e['auth_type4']) > 0:
-            auth_types.append(e['auth_type4'])
-
-        if uin not in self.txn_id_map:
-             self.resident.popup_window('Txn id not found for this UIN. Please request for OTP again')
-             return 
-        if action == 'Lock':
-            ok = auth_lock(uin, self.txn_id_map[uin], otp, auth_types)
-        elif action == 'Unlock':
-            ok = auth_unlock(uin, self.txn_id_map[uin], otp, action, auth_types, seconds)
-        else:
-             self.resident.popup_window('Lock or Unlock not specified in user action')
-             return 
 
 class MyButtons(flx.VBox):
     def init(self, cls_label, cls_label_selected, label_texts):
@@ -128,17 +99,21 @@ class OTPLayout(flx.VBox):
     def populate_otp(self):
         with flx.StackLayout(flex=1) as self.stack:
             with flx.FormLayout() as self.get_otp_form:
-                flx.Label(text='')
+                self.uin = flx.LineEdit(title='UIN', text='')
                 self.get_otp = flx.Button(text='Get OTP')
                 flx.Widget(flex=1)
             with flx.FormLayout() as self.submit_otp_form:
                 self.otp = flx.LineEdit(title='OTP', text='')
-                self.submit_otp = flx.Button(text='Submit', css_class='submit')
+                self.submit_otp = flx.Button(text='Submit')
                 flx.Widget(flex=1)
 
     @flx.reaction('get_otp.pointer_click')
     def handle_get_otp(self, *events):
-        self.stack.set_current(self.submit_otp_form)
+        # self.stack.set_current(self.submit_otp_form)
+        self.get_otp.apply_style('visibility: hidden;')
+        self.otp.apply_style('visibility: visible;')
+        self.otp_label.apply_style('visibility: visible;')
+        self.submit_otp.apply_style('visibility: visible;')
         self.get_otp_submitted() # emit
 
     @flx.reaction('submit_otp.pointer_click')
@@ -156,16 +131,34 @@ class OTPLayout(flx.VBox):
     @flx.action
     def reset_otp_form(self):
         self.otp.set_text('')
-        self.stack.set_current(self.get_otp_form)
+        # self.stack.set_current(self.get_otp_form)
+        self.get_otp.apply_style('visibility: visible;')
+        self.otp.apply_style('visibility: hidden;')
+        self.otp_label.apply_style('visibility: hidden;')
+        self.submit_otp.apply_style('visibility: hidden;')
+
 
 class VidForm(OTPLayout):
     def init(self):
         super().init()
+        '''
         with flx.FormLayout():
             self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
-            self.uin = flx.LineEdit(title='UIN', text='')
         self.populate_otp()
-        # flx.Widget(flex=1)
+        '''
+        gf = OTPGridForm('Get VID',
+                         [
+                         ],
+                         None
+                        )
+        self.uin = gf.uin
+        self.get_otp = gf.get_otp
+        self.otp = gf.otp
+        self.otp_label = gf.otp_label
+        self.submit_otp = gf.submit_otp
+        flx.Widget(flex=1)
+        self.reset_otp_form()
+
     @flx.emitter
     def otp_submitted(self):
         v = super().otp_submitted()
@@ -176,29 +169,38 @@ class VidForm(OTPLayout):
 class UinUpdateForm(OTPLayout):
     def init(self):
         super().init()
-        with flx.FormLayout():
-            self.subtitle = flx.Label(text='Update your UIN details', css_class='subtitle')
-            self.phone = flx.LineEdit(title='Phone', text='')
-            self.email = flx.LineEdit(title='Email', text='')
-            self.dob = flx.LineEdit(title='Date of Birth (YYYY/MM/DD)', text='')
-            self.uin = flx.LineEdit(title='UIN', text='')
-        self.populate_otp()
-
-    @flx.emitter
-    def otp_submitted(self):
-        v = super().otp_submitted()
-        # TODO: add other relevant form fields.
-        v.update({'uin': self.uin.text})
-        return v
+        gf = OTPGridForm('Update your UIN details',
+                         [('field', 'Phone', ''),
+                          ('field', 'Email', ''),
+                          ('field', 'Date of Birth (YYYY/MM/DD)', ''),
+                         ],
+                         None)
+        self.get_otp = gf.get_otp
+        self.otp = gf.otp
+        self.otp_label = gf.otp_label
+        self.submit_otp = gf.submit_otp
+        self.phone = gf.lines[0]
+        self.email = gf.lines[1]
+        self.dob = gf.lines[2]
+        flx.Widget(flex=1)
+        self.reset_otp_form()
 
 class AuthHistoryForm(OTPLayout):
     def init(self):
         super().init()
-        with flx.FormLayout():
-            self.subtitle = flx.Label(text='Fetch your Auth history', css_class='subtitle')
-            self.nrecords = flx.LineEdit(title='Number of records', text='10')
-            self.uin = flx.LineEdit(title='UIN', text='')
-        self.populate_otp()
+        gf = OTPGridForm('Fetch your Auth history',
+                         [('field', 'Number of records', '10'),
+                         ],
+                         None
+                        )
+        self.uin = gf.uin
+        self.get_otp = gf.get_otp
+        self.otp = gf.otp
+        self.otp_label = gf.otp_label
+        self.submit_otp = gf.submit_otp
+        self.nrecords = gf.lines[0]
+        flx.Widget(flex=1)
+        self.reset_otp_form()
 
     @flx.emitter
     def create_grid(self, history):
@@ -216,47 +218,61 @@ class AuthHistoryForm(OTPLayout):
                 flx.Label(text = i)
     '''
 
-class AuthLockForm(OTPLayout):
-    def init(self):
+class GridForm(flx.VBox):
+    def init(self, subtitle, elements):
         super().init()
-        self.selected_action = 'Lock'
-        with flx.FormLayout():
-            self.subtitle = flx.Label(text='Lock/Unlock Authentication', css_class='subtitle')
-            flx.Label(text='')  # Just a gap
-            with flx.VBox():
-                self.subtitle = flx.Label(text='Action:', css_class='checkbox')
-                self.r1 = flx.RadioButton(text='Lock', css_class='checkbox')
-                self.r2 = flx.RadioButton(text='Unlock', css_class='checkbox')
-            self.seconds = flx.LineEdit(title='seconds', text='86400')
-            flx.Label(text='')  # Just a gap
-            with flx.VBox():
-                self.subtitle = flx.Label(text='Auth types:', css_class='checkbox')
-                self.cb1 = flx.CheckBox(text='demo', css_class='checkbox')
-                self.cb2 = flx.CheckBox(text='bio-Finger', css_class='checkbox')
-                self.cb3 = flx.CheckBox(text='bio-Iris', css_class='checkbox')
-                self.cb4 = flx.CheckBox(text='bio-Face', css_class='checkbox')
-                flx.Label(text='')  # Just a gap
-            self.uin = flx.LineEdit(title='UIN', text='')
-        self.populate_otp()
+        with flx.GridLayout(ncolumns=3) as self.grid:
+            flx.Label(text='', flex=(0, 0))
+            flx.Label(text=subtitle, flex=(0, 0), css_class='subtitle')
+            flx.Widget(flex=(1, 0))
+            self.labels = []
+            self.lines = []
+            self.buttons = []
+            for item in elements:
+                if item[0] == 'button':
+                    flx.Widget()
+                    self.buttons.append(flx.Button(text=item[1]))
+                    flx.Widget()
+                elif item[0] == 'field':
+                    self.labels.append(flx.Label(text=item[1], flex=(0, 0), css_class='col_0'))
+                    self.lines.append(flx.LineEdit(text=item[2], css_class='col_1')) 
+                    flx.Widget()
+            flx.Widget(flex=(0, 1))
+            flx.Widget()
+            flx.Widget()
+        flx.Widget(flex=1)
 
-    @flx.reaction('r1.checked', 'r2.checked')
-    def handle_radio_changed(self):
-        ev = events[-1]
-        self.selected_action = ev.source.text
-    
+
+class OTPGridForm(GridForm):
+    def init(self, subtitle, fields):
+        _fields = [('field', 'UIN', '')]
+        _fields.extend(fields)
+        _fields.extend([('button', 'Get OTP'),
+                        ('field', 'OTP', ''),
+                        ('button', 'Submit OTP'),
+                       ])
+        super().init(subtitle, _fields)
+        self.uin = self.lines[0]
+        self.get_otp = self.buttons[-2]
+        self.otp = self.lines[-1]
+        self.otp_label = self.labels[-1]
+        self.submit_otp = self.buttons[-1]
+
+
 class Resident(flx.Widget):
+
     def init(self):
         with flx.VBox():
             with flx.HBox():
                 flx.Label(text='Resident HelpDesk', css_class='sitetitle')
-                flx.ImageWidget(flex=1,source='https://www.omidyarnetwork.in/wp-content/uploads/2019/05/mosip.png', css_class='logo')
+                flx.ImageWidget(flex=1, source='https://www.omidyarnetwork.in/wp-content/uploads/2019/05/mosip.png', css_class='logo', maxsize=(120, 120))
+                flx.Widget(flex=1)
             with flx.HBox():
                 cls_label_selected = 'left_label_selected'
                 cls_label = 'left_label'
-                left_label_texts = ['Registration status',
+                left_label_texts = ['RID status',
                                     'Auth lock',
-                                    'eCard',
-                                    'Print Card',
+                                    'Download card',
                                     'Virtual ID',
                                     'Auth history',
                                     'Update UIN',
@@ -267,24 +283,19 @@ class Resident(flx.Widget):
                 with flx.StackLayout(flex=1) as self.stack:
                     # RID status
                     self.stack_elements = []
-                    with flx.FormLayout(css_class='form') as w:
-                        self.stack_elements.append(w)
-                        self.rid_subtitle = flx.Label(text='RID status', css_class='subtitle')
-                        flx.Label(title='', text='')
-                        self.rid = flx.LineEdit(title='RID', text='')
-                        flx.Label(title='', text='')
-                        self.rid_submit = flx.Button(text='Submit', css_class='submit')
-                        flx.Widget(flex=1)
+                    w = GridForm('RID status',
+                                 [('field', 'RID', ''),
+                                  ('button', 'Submit'),
+                                 ])
+                    self.stack_elements.append(w)
+                    self.rid = w.lines[0]
+                    self.rid_submit = w.buttons[0]
 
-                    # Auth lock
-                    self.auth_lock = AuthLockForm(css_class='form')
-                    self.stack_elements.append(self.auth_lock)
+                    # Auth lock TODO
+                    w = flx.Widget(style='background:#fff')
+                    self.stack_elements.append(w)
   
                     # eCard TODO
-                    w = flx.Widget(style='background:#fff;')
-                    self.stack_elements.append(w)
-
-                    # Print card  TODO
                     w = flx.Widget(style='background:#fff;')
                     self.stack_elements.append(w)
 
@@ -325,35 +336,13 @@ class Resident(flx.Widget):
         self.uin_form.reset_otp_form()
 
     @flx.reaction('history_form.get_otp_submitted')
-    def handle_history_form_get_otp_submit(self, *events):
+    def handle_hitory_form_get_otp_submit(self, *events):
         self.uin_submitted(self.history_form.uin.text)  # emit
 
     @flx.reaction('history_form.otp_submitted')
     def handle_history_form_otp_submit(self, *events):
         self.history_form_otp_submitted(self.history_form.uin.text, self.history_form.otp.text, self.history_form.nrecords.text)
         self.history_form.reset_otp_form()
-
-    @flx.reaction('auth_lock.get_otp_submitted')
-    def handle_auth_lock_get_otp_submit(self, *events):
-        self.uin_submitted(self.auth_lock.uin.text)  # emit
-
-    @flx.reaction('auth_lock.otp_submitted')
-    def handle_auth_lock_otp_submit(self, *events):
-        w = self.auth_lock
-        cb1,cb2,cb3,cb4 = '','','','',''
-        if w.cb1.checked:
-            cb1 = w.cb1.text
-        if w.cb2.checked:
-            cb2 = w.cb2.text
-        if w.cb3.checked:
-            cb3 = w.cb3.text
-        if w.cb4.checked:
-            cb4 = w.cb4.text
-
-        self.auth_lock_otp_submitted(w.uin.text, w.otp.text, w.selected_action, cb1, cb2, cb3, cb4, w.seconds.text)
-        self.auth_lock.reset_otp_form()
-
-
 
     @flx.action
     def popup_window(self, text):
@@ -388,10 +377,6 @@ class Resident(flx.Widget):
     def history_form_otp_submitted(self, uin, otp, nrecords):
         return {'uin': uin, 'otp': otp, 'nrecords': nrecords}
 
-    @flx.emitter
-    def auth_lock_otp_submitted(self, uin, otp, action, cb1, cb2, cb3, cb4, seconds):
-        return {'uin': uin, 'otp': otp, 'selected_action': action, 'auth_type1': cb1, 'auth_type2': cb2, 
-                'auth_type3': cb3, 'auth_type4': cb4, 'seconds': seconds}
 
     @flx.reaction('rid_submit.pointer_click')
     def handle_rid_submit(self, *events):
