@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker build -t mosipdev/resident_prototype_ui:develop .
+docker build -t mosipdev/resident-proto-ui:develop .

@@ -4,6 +4,12 @@ Resident app
 
 from flexx import event, flx, config
 from api_wrapper import get_rid_status, get_credential_types, req_otp, get_vid, update_uin, get_auth_history
+from uin_update import UinUpdateForm
+from buttons import MyButtons
+from otp import OTPGridForm
+from grid import GridForm
+from vid import VidForm
+from auth_history import AuthHistoryForm
 
 with open('style.css') as f:
     style = f.read()
@@ -67,196 +73,6 @@ class ResidentMain(flx.PyComponent):
              return 
         ok, history = get_auth_history(uin, self.txn_id_map[uin], otp, nrecords)
         self.resident.create_grid(history) 
-
-class MyButtons(flx.VBox):
-    def init(self, cls_label, cls_label_selected, label_texts):
-        super().init()
-        self.cls_label = cls_label
-        self.cls_label_selected = cls_label_selected
-        self.labels = [flx.Label(text=t, css_class=self.cls_label)
-                       for t in label_texts]
-        flx.Widget(flex=1)  # space filler
-        for i, label in enumerate(self.labels):
-            label.index = i
-        self.current_label = self.labels[0]
-        self.current_label.set_css_class(self.cls_label_selected)
-
-    @flx.emitter
-    def label_changed(self, i):
-        return {'index': i}
-
-    @flx.reaction('labels*.pointer_down')
-    def _stacked_current(self, *events):
-        cur = self.current_label
-        cur.set_css_class(self.cls_label)  # Reset the color
-        cur  = events[-1].source  # New selected label
-        cur.set_css_class(self.cls_label_selected)
-        self.current_label = cur
-        self.label_changed(cur.index)
-
-
-class OTPLayout(flx.VBox):
-    def populate_otp(self):
-        with flx.StackLayout(flex=1) as self.stack:
-            with flx.FormLayout() as self.get_otp_form:
-                self.uin = flx.LineEdit(title='UIN', text='')
-                self.get_otp = flx.Button(text='Get OTP')
-                flx.Widget(flex=1)
-            with flx.FormLayout() as self.submit_otp_form:
-                self.otp = flx.LineEdit(title='OTP', text='')
-                self.submit_otp = flx.Button(text='Submit')
-                flx.Widget(flex=1)
-
-    @flx.reaction('get_otp.pointer_click')
-    def handle_get_otp(self, *events):
-        # self.stack.set_current(self.submit_otp_form)
-        self.get_otp.apply_style('visibility: hidden;')
-        self.otp.apply_style('visibility: visible;')
-        self.otp_label.apply_style('visibility: visible;')
-        self.submit_otp.apply_style('visibility: visible;')
-        self.get_otp_submitted() # emit
-
-    @flx.reaction('submit_otp.pointer_click')
-    def handle_submit_otp(self, *events):
-        self.otp_submitted()
-
-    @flx.emitter
-    def otp_submitted(self):
-        return {'otp': self.otp.text}
-
-    @flx.emitter
-    def get_otp_submitted(self):
-        return {}
-
-    @flx.action
-    def reset_otp_form(self):
-        self.otp.set_text('')
-        # self.stack.set_current(self.get_otp_form)
-        self.get_otp.apply_style('visibility: visible;')
-        self.otp.apply_style('visibility: hidden;')
-        self.otp_label.apply_style('visibility: hidden;')
-        self.submit_otp.apply_style('visibility: hidden;')
-
-
-class VidForm(OTPLayout):
-    def init(self):
-        super().init()
-        '''
-        with flx.FormLayout():
-            self.vid_subtitle = flx.Label(text='Get VID', css_class='subtitle')
-        self.populate_otp()
-        '''
-        gf = OTPGridForm('Get VID',
-                         [
-                         ],
-                         None
-                        )
-        self.uin = gf.uin
-        self.get_otp = gf.get_otp
-        self.otp = gf.otp
-        self.otp_label = gf.otp_label
-        self.submit_otp = gf.submit_otp
-        flx.Widget(flex=1)
-        self.reset_otp_form()
-
-    @flx.emitter
-    def otp_submitted(self):
-        v = super().otp_submitted()
-        # TODO: add other relevant form fields.
-        v.update({'uin': self.uin.text})
-        return v
-
-class UinUpdateForm(OTPLayout):
-    def init(self):
-        super().init()
-        gf = OTPGridForm('Update your UIN details',
-                         [('field', 'Phone', ''),
-                          ('field', 'Email', ''),
-                          ('field', 'Date of Birth (YYYY/MM/DD)', ''),
-                         ],
-                         None)
-        self.get_otp = gf.get_otp
-        self.otp = gf.otp
-        self.otp_label = gf.otp_label
-        self.submit_otp = gf.submit_otp
-        self.phone = gf.lines[0]
-        self.email = gf.lines[1]
-        self.dob = gf.lines[2]
-        flx.Widget(flex=1)
-        self.reset_otp_form()
-
-class AuthHistoryForm(OTPLayout):
-    def init(self):
-        super().init()
-        gf = OTPGridForm('Fetch your Auth history',
-                         [('field', 'Number of records', '10'),
-                         ],
-                         None
-                        )
-        self.uin = gf.uin
-        self.get_otp = gf.get_otp
-        self.otp = gf.otp
-        self.otp_label = gf.otp_label
-        self.submit_otp = gf.submit_otp
-        self.nrecords = gf.lines[0]
-        flx.Widget(flex=1)
-        self.reset_otp_form()
-
-    @flx.emitter
-    def create_grid(self, history):
-        return {'history': history}
-
-    '''
-    #TODO: this doesn't work
-    @flx.reaction('create_grid')
-    def handle_create_grid(self, *events):
-        print('EVENT REACHED AUTH HISTORY')
-        history = events[-1]['history']
-        print(history)
-        with flx.GridLayout(ncolumns=9, css_class='gridLabel'):
-            for i in history:
-                flx.Label(text = i)
-    '''
-
-class GridForm(flx.VBox):
-    def init(self, subtitle, elements):
-        super().init()
-        with flx.GridLayout(ncolumns=3) as self.grid:
-            flx.Label(text='', flex=(0, 0))
-            flx.Label(text=subtitle, flex=(0, 0), css_class='subtitle')
-            flx.Widget(flex=(1, 0))
-            self.labels = []
-            self.lines = []
-            self.buttons = []
-            for item in elements:
-                if item[0] == 'button':
-                    flx.Widget()
-                    self.buttons.append(flx.Button(text=item[1]))
-                    flx.Widget()
-                elif item[0] == 'field':
-                    self.labels.append(flx.Label(text=item[1], flex=(0, 0), css_class='col_0'))
-                    self.lines.append(flx.LineEdit(text=item[2], css_class='col_1')) 
-                    flx.Widget()
-            flx.Widget(flex=(0, 1))
-            flx.Widget()
-            flx.Widget()
-        flx.Widget(flex=1)
-
-
-class OTPGridForm(GridForm):
-    def init(self, subtitle, fields):
-        _fields = [('field', 'UIN', '')]
-        _fields.extend(fields)
-        _fields.extend([('button', 'Get OTP'),
-                        ('field', 'OTP', ''),
-                        ('button', 'Submit OTP'),
-                       ])
-        super().init(subtitle, _fields)
-        self.uin = self.lines[0]
-        self.get_otp = self.buttons[-2]
-        self.otp = self.lines[-1]
-        self.otp_label = self.labels[-1]
-        self.submit_otp = self.buttons[-1]
 
 
 class Resident(flx.Widget):
@@ -395,7 +211,8 @@ def main(argv):
     app = flx.App(ResidentMain,
                   title='Resident Portal') # , icon=ico)
     # app.export('test.html', link=0)
-    config.hostname = '0.0.0.0'
+    #config.hostname = '0.0.0.0'
+    flx.create_server(host='0.0.0.0', port=49190)
     app.serve('')
     #app.launch('browser')
     flx.run()
