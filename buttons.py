@@ -10,6 +10,8 @@ class MyButtons(flx.VBox):
         flx.Widget(flex=1)  # space filler
         for i, label in enumerate(self.labels):
             label.index = i
+        #flx.Label(text='', style='width: 500px;')  # Expanded the space, otherwise form gets clipped.
+        flx.Label(text='')
         self.current_label = self.labels[0]
         self.current_label.set_css_class(self.cls_label_selected)
 

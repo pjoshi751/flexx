@@ -9,6 +9,7 @@ from buttons import MyButtons
 from otp import OTPGridForm
 from grid import GridForm
 from vid import VidForm
+from auth_lock import AuthLockForm
 from auth_history import AuthHistoryForm
 
 with open('style.css') as f:
@@ -107,27 +108,27 @@ class Resident(flx.Widget):
                     self.rid = w.lines[0]
                     self.rid_submit = w.buttons[0]
 
-                    # Auth lock TODO
-                    w = flx.Widget(style='background:#fff')
-                    self.stack_elements.append(w)
+                    # Auth lock
+                    self.auth_lock = AuthLockForm()
+                    self.stack_elements.append(self.auth_lock)
   
                     # eCard TODO
                     w = flx.Widget(style='background:#fff;')
                     self.stack_elements.append(w)
 
                     # VID
-                    self.vid_form = VidForm(css_class='form')
+                    self.vid_form = VidForm()
                     self.stack_elements.append(self.vid_form)
 
                     # Auth history 
-                    self.history_form = AuthHistoryForm(css_class='form')
+                    self.history_form = AuthHistoryForm()
                     self.stack_elements.append(self.history_form)
 
                     # Update UIN 
-                    self.uin_form = UinUpdateForm(css_class='form')
+                    self.uin_form = UinUpdateForm()
                     self.stack_elements.append(self.uin_form)
 
-            flx.Label(text='(c) MOSIP www.mosip.io', css_class='sitefooter')
+            flx.Label(text='(c) MOSIP www.mosip.io', css_class='footer')
 
     @flx.reaction('vid_form.get_otp_submitted')
     def handle_vid_form_get_otp_submit(self, *events):
@@ -159,6 +160,29 @@ class Resident(flx.Widget):
     def handle_history_form_otp_submit(self, *events):
         self.history_form_otp_submitted(self.history_form.uin.text, self.history_form.otp.text, self.history_form.nrecords.text)
         self.history_form.reset_otp_form()
+
+    @flx.reaction('auth_lock.get_otp_submitted')
+    def handle_auth_lock_form_get_otp_submit(self, *events):
+        self.uin_submitted(self.auth_lock.uin.text)  # emit
+
+    @flx.reaction('auth_lock.otp_submitted')
+    def handle_auth_lock_otp_submit(self, *events):
+        print(self.auth_lock.checkbox)
+        '''
+        w = self.auth_lock
+        cb1,cb2,cb3,cb4 = '','','','',''
+        if w.cb1.checked:
+            cb1 = w.cb1.text
+        if w.cb2.checked:
+            cb2 = w.cb2.text
+        if w.cb3.checked:
+            cb3 = w.cb3.text
+        if w.cb4.checked:
+            cb4 = w.cb4.text
+
+        self.auth_lock_otp_submitted(w.uin.text, w.otp.text, w.selected_action, cb1, cb2, cb3, cb4, w.seconds.text)
+        self.auth_lock.reset_otp_form()
+        '''
 
     @flx.action
     def popup_window(self, text):

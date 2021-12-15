@@ -43,3 +43,7 @@
 .col_1 {
     width: 20em !important;
 }
+
+.footer {
+    max-height: 100px !important;
+}

@@ -1,11 +1,12 @@
 from flexx import flx
 from otp import OTPLayout, OTPGridForm
 
-class VidForm(OTPLayout):
+class AuthLockForm(OTPLayout):
     def init(self):
         super().init()
-        gf = OTPGridForm('Get VID',
-                         [
+        gf = OTPGridForm('Lock/unlock your authentication',
+                         [('radio', 'Lock/unlock', ['lock', 'unlock']),
+                          ('checkbox', 'Auth types', ['demo', 'bio-Finger', 'bio-Iris', 'bio-Face'])
                          ],
                          None
                         )
@@ -14,12 +15,7 @@ class VidForm(OTPLayout):
         self.otp = gf.otp
         self.otp_label = gf.otp_label
         self.submit_otp = gf.submit_otp
+        self.nrecords = gf.lines[0]
         flx.Widget(flex=1)
         self.reset_otp_form()
 
-    @flx.emitter
-    def otp_submitted(self):
-        v = super().otp_submitted()
-        # TODO: add other relevant form fields.
-        v.update({'uin': self.uin.text})
-        return v
